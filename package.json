@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --respawn src/index.ts"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "eslint": "^8.19.0",
-    "eslint-config-trybe-backend": "^1.0.4"
+    "eslint-config-trybe-backend": "^1.0.4",
+    "nodemon": "^2.0.19"
   }
 }
