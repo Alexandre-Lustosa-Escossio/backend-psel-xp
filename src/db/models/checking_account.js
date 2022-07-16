@@ -1,7 +1,15 @@
 const CheckingAccount = (sequelize, DataTypes) => {
   const CheckingAccount = sequelize.define("Checking_Accounts", {
-    customer_id: DataTypes.INTEGER,
-    balance: DataTypes.INTEGER 
+    customer_id: {
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    balance: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    } 
   }, { timestamps: false })
   
   CheckingAccount.associate = (models) => {

@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    queryInterface.bulkInsert('assets',
+    queryInterface.bulkInsert('Assets',
     [
       {
         asset_code: 'xpbr31',

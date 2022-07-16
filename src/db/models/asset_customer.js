@@ -1,17 +1,17 @@
 const AssetCustomer = (sequelize, DataTypes) => {
   const AssetCustomer = sequelize.define('Assets_Customers', {
-    quantity: DataTypes.INTEGER
+    quantity: {type: DataTypes.INTEGER}
   }, {timestamps: false})
 
   AssetCustomer.associate = (models) => {
-    AssetCustomer.belongsToMany(models.Customer,
+    models.Assets.belongsToMany(models.Customer,
       {
         foreignKey: 'asset_id',
         as: 'customer',
         through: AssetCustomer,
         otherKey: 'customer_id'
       })
-    AssetCustomer.belongsToMany(models.Asset,
+    models.Customer.belongsToMany(models.Assets,
       {
         foreignKey: 'customer_id',
         as: 'asset',

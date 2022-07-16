@@ -1,7 +1,15 @@
 const Credential = (sequelize, DataTypes) => {
   const Credential = sequelize.define('Credentials', {
-    customer_id: DataTypes.INTEGER,
-    password: DataTypes.INTEGER,
+    customer_id: {
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    password: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
   }, { timestamps: false })
   
   Credential.associate = (models) => {

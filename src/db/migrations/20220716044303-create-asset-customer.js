@@ -1,13 +1,13 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('asset_customers', {
+    await queryInterface.createTable('Asset_customers', {
       customer_id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
-          model: 'customers',
+          model: 'Customers',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -18,7 +18,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
-          model: 'assets',
+          model: 'Assets',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -31,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('asset_customers');
+    await queryInterface.dropTable('Asset_customers');
   }
 };
