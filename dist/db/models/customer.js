@@ -7,7 +7,9 @@ const Customer = (sequelize, DataTypes) => {
 
   Customer.associate = (models) => {
     Customer.hasOne(models.Credential,
-    {foreignKey: 'id', as:'credentials'})
+      { foreignKey: 'id', as: 'credentials' })
+    Customer.hasOne(models.CheckingAccount,
+    {foreignKey: 'id', as: 'checking_account'})
   }
 
   return Customer
