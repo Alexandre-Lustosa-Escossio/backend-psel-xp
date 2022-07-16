@@ -1,8 +1,6 @@
-const customerService = require("../services/customer.service")
-const {Customer} = require('../db/models')
+const assetCustomerService = require('../services/assetCustomer.service')
 const buyOrder = async (req, res) => {
-  const {codCliente} = req.body
-  const customer = await Customer.findAll()
+  const customer = await assetCustomerService.buyOrder(req.body)
   res.status(200).json(customer)
 }
 
