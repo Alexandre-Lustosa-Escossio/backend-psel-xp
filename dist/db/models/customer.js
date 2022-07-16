@@ -10,8 +10,8 @@ const Customer = (sequelize, DataTypes) => {
       { foreignKey: 'customer_id', as: 'credentials' })
     Customer.hasOne(models.CheckingAccount,
       { foreignKey: 'customer_id', as: 'checking_account' })
-    Customer.hasMany(models.AssetClient,
-      {foreignKey:'customer_id', as:'asset_client'})
+    Customer.hasMany(models.AssetCustomer,
+      {foreignKey:'customer_id', as:'asset_customer'})
   }
 
   return Customer
