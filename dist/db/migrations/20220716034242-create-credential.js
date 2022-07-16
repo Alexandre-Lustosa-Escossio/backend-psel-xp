@@ -3,9 +3,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('credentials', {
       customer_id: {
+        primaryKey: true,
         allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        field: 'customer_id',
         references: {
           model: 'customers',
           key: 'id'

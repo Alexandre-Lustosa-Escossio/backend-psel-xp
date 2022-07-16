@@ -3,7 +3,13 @@ const Asset = (sequelize, DataTypes) => {
     id: DataTypes.INTEGER,
     asset_code: DataTypes.STRING,
     asset_name: DataTypes.STRING
-  })
+  }, {timestamps: false})
+
+  Asset.associate = (models) => {
+    Asset.hasMany(models.AssetClient,
+    {foreignKey: 'asset_id', as: 'asset'})
+  }
+
   return Asset
 }
 

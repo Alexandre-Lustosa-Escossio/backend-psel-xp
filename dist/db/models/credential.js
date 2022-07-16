@@ -6,7 +6,7 @@ const Credential = (sequelize, DataTypes) => {
   
   Credential.associate = (models) => {
     Credential.belongsTo(models.Customer,
-    {foreignKey: 'customer_id', as: 'customer'})
+    {foreignKey: 'customer_id', as: 'credential'})
   }
 
   return Credential
