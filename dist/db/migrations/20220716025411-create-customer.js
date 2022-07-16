@@ -11,7 +11,10 @@ module.exports = {
       customer_name: {
         type: Sequelize.STRING
       },
-    }, {timestamps: false});
+      email: {
+        type: Sequelize.STRING
+      }
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('customers');
