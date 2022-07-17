@@ -5,14 +5,7 @@
 //Adicionar se ativo não presente
 const {Asset_Customers: assetCustomers, Assets, Customers} = require('../db/models')
 const assetService = require('./asset.service')
-
-const getCustomerAssets = async (customerId) => {
-  const customerAssets = await Customers.findOne({
-    where: { id: customerId },
-    include:[{model: Assets, as: 'assets', through: {attributes: ['quantity']}}]
-  })
-  return customerAssets
-}
+const customerService = require('./customer.service')
 
 const checkAssetInWallet = ({ assets },codAtivo) => {
   const foundAsset = assets.find(({dataValues}) => dataValues.asset_code === codAtivo)
@@ -42,10 +35,10 @@ const createAssetInWallet = async ({codAtivo, codCliente, qtdeAtivo}) => {
 
 const buyOrder = async (payload) => {
   const { codCliente, codAtivo } = payload
-  const customerAssets = await getCustomerAssets(codCliente)
+  const customerAssets = await customerService.getCustomerAssets(codCliente)
   const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
   if (assetInWallet) {
-    await updateAssetQuantity(assetInWallet, payload)
+    const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload)
     const updatedAssetRecord = {codCliente, codAtivo, qtdeAtivo: newAssetQuantity}
     return updatedAssetRecord
   } 
