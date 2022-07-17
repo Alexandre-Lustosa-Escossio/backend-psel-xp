@@ -1,11 +1,7 @@
-//Buscar clientAssets
-//Buscar nomeAtivo
-//Buscar ativo na lista cliente
-//Somar se ativo já presente
-//Adicionar se ativo não presente
 const {Asset_Customers: assetCustomers, Assets, Customers} = require('../db/models')
 const assetService = require('./asset.service')
 const customerService = require('./customer.service')
+const b3MockApi = require('../utils/b3MockApi')
 
 const checkAssetInWallet = ({ assets },codAtivo) => {
   const foundAsset = assets.find(({dataValues}) => dataValues.asset_code === codAtivo)
@@ -33,17 +29,28 @@ const createAssetInWallet = async ({codAtivo, codCliente, qtdeAtivo}) => {
   return insertedRecord
 }
 
-const buyOrder = async (payload) => {
-  const { codCliente, codAtivo } = payload
-  const customerAssets = await customerService.getCustomerAssets(codCliente)
-  const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
+const handleAssetScenarios = (assetInWallet, payload) => {
   if (assetInWallet) {
     const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload)
     const updatedAssetRecord = {codCliente, codAtivo, qtdeAtivo: newAssetQuantity}
     return updatedAssetRecord
-  } 
+  }
   const newAssetRecord = await createAssetInWallet(payload)
   return newAssetRecord
+}
+
+const buyOrder = async (payload) => {
+  const orderExecuted = b3MockApi(payload)
+  if (orderExecuted) {
+    const { codCliente, codAtivo } = payload
+    const customerAssets = await customerService.getCustomerAssets(codCliente)
+    const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
+    const newAssetRecord = handleAssetScenarios(assetInWallet, payload)
+    return newAssetRecord
+  } 
+  const err = new Error(errMsgs.quantityTooHigh)
+  err.status = StatusCodes.INTERNAL_SERVER_ERROR
+  throw err
 }
 
 module.exports = {buyOrder}
