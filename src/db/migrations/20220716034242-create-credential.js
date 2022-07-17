@@ -15,7 +15,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       password: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
     });
   },

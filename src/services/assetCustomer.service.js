@@ -43,6 +43,7 @@ const handleAssetScenarios = async (assetInWallet, payload) => {
 
 const buyOrder = async (payload) => {
   const b3Response = b3MockApi(payload)
+  console.log(b3Response)
   if (b3Response.status !== StatusCodes.OK) {
     throw b3Response
   } 

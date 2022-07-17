@@ -8,7 +8,7 @@ const Credential = (sequelize, DataTypes) => {
     },
     password: {
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
   }, { timestamps: false })
   
