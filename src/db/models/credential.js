@@ -13,7 +13,7 @@ const Credential = (sequelize, DataTypes) => {
   }, { timestamps: false })
   
   Credential.associate = (models) => {
-    Credential.belongsTo(models.Customer,
+    Credential.belongsTo(models.Customers,
     {foreignKey: 'customer_id', as: 'credential'})
   }
 

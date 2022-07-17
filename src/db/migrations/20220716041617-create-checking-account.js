@@ -1,18 +1,17 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Checking_accounts', {
+    await queryInterface.createTable('Checking_Accounts', {
       customer_id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Customers',
           key: 'id'
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       balance: {
         type: Sequelize.INTEGER
@@ -20,6 +19,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Checking_accounts');
+    await queryInterface.dropTable('Checking_Accounts');
   }
 };

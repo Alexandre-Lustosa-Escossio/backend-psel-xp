@@ -9,12 +9,12 @@ const CheckingAccount = (sequelize, DataTypes) => {
     balance: {
       allowNull: false,
       type: DataTypes.INTEGER
-    } 
+    } ,
   }, { timestamps: false })
   
   CheckingAccount.associate = (models) => {
-    CheckingAccount.belongsTo(models.Customer,
-    {foreingKey: 'id', as: 'customer'})
+    CheckingAccount.belongsTo(models.Customers,
+    {foreignKey: 'customer_id', as: 'checking_account'})
   }
 
   return CheckingAccount

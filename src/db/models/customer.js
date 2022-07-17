@@ -1,5 +1,5 @@
 const Customer = (sequelize, DataTypes) => {
-  const Customer = sequelize.define('Customer', {
+  const Customer = sequelize.define('Customers', {
     id: {
       primaryKey: true,
       allowNull: false,
@@ -21,7 +21,7 @@ const Customer = (sequelize, DataTypes) => {
       { foreignKey: 'customer_id', as: 'credentials' })
     Customer.hasOne(models.Checking_Accounts,
       { foreignKey: 'customer_id', as: 'checking_account' })
-    Customer.hasMany(models.Assets_Customers,
+    Customer.hasMany(models.Asset_Customers,
       {foreignKey:'customer_id', as:'asset_customer'})
   }
 

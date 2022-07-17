@@ -3,10 +3,10 @@
 //Buscar ativo na lista cliente
 //Somar se ativo já presente
 //Adicionar se ativo não presente
-const customerService = require('./customer.service')
+const {Asset_Customers: assetCustomers} = require('../db/models')
 const buyOrder = async ({ codCliente, codAtivo, qtdeAtivo }) => {
-  const clientAssets = await customerService.getById(codCliente)
-  return clientAssets
+  const customerAssets =  await assetCustomers.findAll()
+  return customerAssets
 }
 
 module.exports = {buyOrder}
