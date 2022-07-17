@@ -33,22 +33,24 @@ const updateAssetQuantity = async ({dataValues}, {qtdeAtivo, codCliente}) => {
   return newQuantity 
 }
 
-const createAssetInWallet = async ({codAtivo, codCliente, quantity}) => {
-  const assetData = await assetService.getByName(codAtivo)
-  console.log(assetData)
-  //const newCustomerAssetRecord = {customer_id: codCliente, asset_id: assetData, quantity}
-  //const insertedRecord = await assetCustomers.create(newCustomerAssetRecord)
-  return assetData
+const createAssetInWallet = async ({codAtivo, codCliente, qtdeAtivo}) => {
+  const {dataValues} = await assetService.getByCode(codAtivo)
+  const newCustomerAssetRecord = {customer_id: codCliente, asset_id: dataValues.id, quantity: qtdeAtivo}
+  const insertedRecord = await assetCustomers.create(newCustomerAssetRecord)
+  return insertedRecord
 }
 
 const buyOrder = async (payload) => {
-  const { codCliente, codAtivo, qtdeAtivo } = payload
+  const { codCliente, codAtivo } = payload
   const customerAssets = await getCustomerAssets(codCliente)
   const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
-  const newAssetQuantity = assetInWallet ?
-    await updateAssetQuantity(assetInWallet, payload) : await createAssetInWallet(payload)
-  const response = {codCliente, codAtivo, qtdeAtivo: newAssetQuantity}
-  return response
+  if (assetInWallet) {
+    await updateAssetQuantity(assetInWallet, payload)
+    const updatedAssetRecord = {codCliente, codAtivo, qtdeAtivo: newAssetQuantity}
+    return updatedAssetRecord
+  } 
+  const newAssetRecord = await createAssetInWallet(payload)
+  return newAssetRecord
 }
 
 module.exports = {buyOrder}
