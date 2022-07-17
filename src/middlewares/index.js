@@ -1,9 +1,11 @@
-const {assetOrderValidator} = require('./assetOrderValidator')
-const {errorHandler} = require('./errorHandler')
+const {validateQuantity} = require('./assetOrderValidator')
+const  errorHandler  = require('./errorHandler')
+const {tokenValidator } = require('./tokenValidator')
 
 const index = {
-  assetOrderValidator,
-  errorHandler
+  validateQuantity,
+  errorHandler,
+  tokenValidator
 }
 
 module.exports = index
