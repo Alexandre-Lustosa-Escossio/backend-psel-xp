@@ -3,7 +3,11 @@ const errMsgs = require('./errorMessages.json')
 const maxQuantityAllowed = 100
 const b3MockApi = (payload) => {
   if (payload.qtdeAtivo > maxQuantityAllowed) {
-    return false
+    const err = new Error(errMsgs.quantityTooHigh)
+    err.status = StatusCodes.INTERNAL_SERVER_ERROR
+    return err
   }
-  return true
+  return StatusCodes.OK
 }
+
+module.exports = b3MockApi

@@ -2,6 +2,8 @@ const {Asset_Customers: assetCustomers, Assets, Customers} = require('../db/mode
 const assetService = require('./asset.service')
 const customerService = require('./customer.service')
 const b3MockApi = require('../utils/b3MockApi')
+const errMsgs = require('../utils/errorMessages.json')
+const { StatusCodes } = require('http-status-codes')
 
 const checkAssetInWallet = ({ assets },codAtivo) => {
   const foundAsset = assets.find(({dataValues}) => dataValues.asset_code === codAtivo)
@@ -29,10 +31,10 @@ const createAssetInWallet = async ({codAtivo, codCliente, qtdeAtivo}) => {
   return insertedRecord
 }
 
-const handleAssetScenarios = (assetInWallet, payload) => {
+const handleAssetScenarios = async (assetInWallet, payload) => {
   if (assetInWallet) {
     const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload)
-    const updatedAssetRecord = {codCliente, codAtivo, qtdeAtivo: newAssetQuantity}
+    const updatedAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}
     return updatedAssetRecord
   }
   const newAssetRecord = await createAssetInWallet(payload)
@@ -40,17 +42,15 @@ const handleAssetScenarios = (assetInWallet, payload) => {
 }
 
 const buyOrder = async (payload) => {
-  const orderExecuted = b3MockApi(payload)
-  if (orderExecuted) {
-    const { codCliente, codAtivo } = payload
-    const customerAssets = await customerService.getCustomerAssets(codCliente)
-    const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
-    const newAssetRecord = handleAssetScenarios(assetInWallet, payload)
-    return newAssetRecord
+  const b3Response = b3MockApi(payload)
+  if (b3Response.status !== StatusCodes.OK) {
+    throw b3Response
   } 
-  const err = new Error(errMsgs.quantityTooHigh)
-  err.status = StatusCodes.INTERNAL_SERVER_ERROR
-  throw err
+  const { codCliente, codAtivo } = payload
+  const customerAssets = await customerService.getCustomerAssets(codCliente)
+  const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
+  const newAssetRecord = await handleAssetScenarios(assetInWallet, payload)
+  return newAssetRecord
 }
 
 module.exports = {buyOrder}
