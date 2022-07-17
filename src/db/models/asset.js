@@ -16,11 +16,6 @@ const Asset = (sequelize, DataTypes) => {
     }
   }, {timestamps: false})
 
-  Asset.associate = (models) => {
-    Asset.hasMany(models.Asset_Customers,
-    {foreignKey: 'asset_id', as: 'asset'})
-  }
-
   return Asset
 }
 

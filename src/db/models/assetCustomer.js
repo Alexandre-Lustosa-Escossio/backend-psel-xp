@@ -14,7 +14,7 @@ const AssetCustomer = (sequelize, DataTypes) => {
     models.Customers.belongsToMany(models.Assets,
       {
         foreignKey: 'customer_id',
-        as: 'asset',
+        as: 'assets',
         through: AssetCustomer,
         otherKey: 'asset_id'
       })
