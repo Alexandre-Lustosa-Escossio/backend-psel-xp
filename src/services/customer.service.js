@@ -1,4 +1,7 @@
-const {Customers, Assets, Credentials} = require('../db/models')
+const { Customers, Assets, Credentials } = require('../db/models')
+const { generateToken } = require('../utils/tokenGenerator')
+const errMsgs = require('../utils/errorMessages.json')
+const { StatusCodes } = require('http-status-codes')
 
 const getCustomerAssets = async (customerId) => {
   const customerAssets = await Customers.findOne({
@@ -10,7 +13,7 @@ const getCustomerAssets = async (customerId) => {
 
 const signInCustomer = async (payload) => {
   const { email, password } = payload
-  const response = await Customers.findOne({
+  const customerData = await Customers.findOne({
     where: { email },
     include: [
       {
@@ -20,7 +23,13 @@ const signInCustomer = async (payload) => {
       }
     ]
   })
-  return response
+  if (!customerData) {
+    const err = new Error(errMsgs.invalidEmailOrPassword)
+    err.status = StatusCodes.UNAUTHORIZED
+    throw err
+  }
+  const token = generateToken(customerData.id)
+  return token
 }
 
 module.exports = {getCustomerAssets, signInCustomer}
