@@ -7,6 +7,11 @@ const validateQuantity = (req, _res, next) => {
     err.status = StatusCodes.UNPROCESSABLE_ENTITY
     next(err)
   }
+  if (typeof qtdeAtivo !== 'number') {
+    const err = new Error(errMsgs.nonNumericalQuantity)
+    err.status = StatusCodes.UNPROCESSABLE_ENTITY
+    next(err)
+  }
   next()
 }
 

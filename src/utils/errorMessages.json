@@ -1,4 +1,5 @@
 {
   "quantityTooLow": "Só é possível comprar uma quantidade de ações acima de zero",
-  "quantityTooHigh": "No momento não há ordens de venda suficientes para executar a operação"
+  "quantityTooHigh": "No momento não há ordens de venda suficientes para executar a operação",
+  "nonNumericalQuantity": "O campo quantidade deve possuir valor numérico"
 }
