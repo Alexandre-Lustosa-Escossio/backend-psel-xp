@@ -6,6 +6,8 @@ const router = Router();
 router.post('/investimentos/compra', tokenValidator ,validateQuantity, assetCustomerController.buyOrder)
 router.post('/investimentos/venda', tokenValidator, validateQuantity, assetCustomerController.sellOrder)
 
+router.get('/ativos/:id', customerController.getCustomerAssets)
+
 router.post('/login', customerController.signInCustomer)
 
 router.use(errorHandler)
