@@ -2,8 +2,10 @@ const { Customers, Assets, Credentials } = require('../db/models')
 const { generateToken } = require('../utils/tokenGenerator')
 const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
+const financialDataApiRequests = require('../utils/financialDataApiRequests')
 
 const getCustomerAssets = async (customerId) => {
+  await financialDataApiRequests.getAssetPrice('AAPL')  
   const customerAssets = await Customers.findOne({
     where: { id: customerId },
     include:[{model: Assets, as: 'assets', through: {attributes: ['quantity']}}]

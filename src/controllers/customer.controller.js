@@ -1,9 +1,9 @@
 const { StatusCodes } = require('http-status-codes')
 const customerService = require('../services/customer.service')
+const financialDataApiRequests = require('../utils/financialDataApiRequests')
 
 const assembleCustomerAssetsResponse = (customerAssets) => {
   const { assets, id: CodCliente } = customerAssets
-  console.log(assets)
   const assembledResponse = assets.map(asset => ({
     CodCliente,
     CodAtivo: asset.asset_code,
