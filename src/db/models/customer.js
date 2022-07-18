@@ -21,6 +21,8 @@ const Customer = (sequelize, DataTypes) => {
       { foreignKey: 'customer_id', as: 'credentials' })
     Customer.hasOne(models.Checking_Accounts,
       { foreignKey: 'customer_id', as: 'checking_account' })
+    /* Customer.hasOne(models.Order_Placements),
+      {foreignKey: 'customer_id', as: 'order_placements'} */
   }
 
   return Customer

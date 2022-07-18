@@ -14,9 +14,17 @@ const Asset = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     }
-  }, {timestamps: false})
+  }, { timestamps: false })
 
-  return Asset
+  /* Asset.associate(models => {
+    Asset.hasMany(models.Order_Placements, {
+      foreignKey: 'asset_id', as: 'Assets'
+    })
+  }) */
+    
+    return Asset
+
 }
+
 
 module.exports = Asset
