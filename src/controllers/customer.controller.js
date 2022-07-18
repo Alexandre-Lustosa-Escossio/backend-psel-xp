@@ -7,7 +7,8 @@ const assembleCustomerAssetsResponse = (customerAssets) => {
   const assembledResponse = assets.map(asset => ({
     CodCliente,
     CodAtivo: asset.asset_code,
-    QtdeAtivo: asset.Asset_Customers.quantity
+    QtdeAtivo: asset.Asset_Customers.quantity,
+    Valor: asset.Asset_Customers.price
   }))
   return assembledResponse
 }

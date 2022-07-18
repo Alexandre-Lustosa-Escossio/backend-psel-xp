@@ -4,12 +4,27 @@ const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
 const financialDataApiRequests = require('../utils/financialDataApiRequests')
 
+
+const requestPrice = async (asset) => {
+  const price = await financialDataApiRequests.getAssetPrice(asset.asset_code)
+  return price
+}
+
+const appendAssetsPrices = async ({ assets }) => {
+  const assetsWithPrice = await Promise.all(assets.map( async (asset) => {
+    const price = await requestPrice(asset)
+    asset.Asset_Customers.price = price
+    return asset
+  }))
+  return assetsWithPrice
+}
+
 const getCustomerAssets = async (customerId) => {
-  await financialDataApiRequests.getAssetPrice('AAPL')  
   const customerAssets = await Customers.findOne({
     where: { id: customerId },
     include:[{model: Assets, as: 'assets', through: {attributes: ['quantity']}}]
   })
+  customerAssets.assets = await appendAssetsPrices(customerAssets)
   return customerAssets
 }
 

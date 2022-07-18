@@ -8,8 +8,8 @@ const getAssetPrice = async (tickers) => {
       'x-api-key': process.env.FINANCE_API_KEY
     }
   })
-  const {result} = assetData.data.quoteResponse
-  return result
+  const {regularMarketPrice} = assetData.data.quoteResponse.result[0]
+  return regularMarketPrice
 }
 
 
