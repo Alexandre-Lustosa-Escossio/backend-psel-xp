@@ -4,6 +4,7 @@ const customerService = require('./customer.service')
 const b3MockApi = require('../utils/b3MockApi')
 const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
+const raiseError = require('../utils/raiseError')
 
 const findAssetInWallet = ({ assets },codAtivo) => {
   const foundAsset = assets.find(({dataValues}) => dataValues.asset_code === codAtivo)
@@ -43,15 +44,11 @@ const handleBuyAssetScenarios = async (assetInWallet, payload) => {
 
 const handleSellAssetScenarios = async (assetInWallet, payload) => {
   if (!assetInWallet) {
-    const err = new Error(errMsgs.youDontHaveThatAsset)
-    err.status = StatusCodes.NOT_ACCEPTABLE
-    throw err
+    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.youDontHaveThatAsset)
   }
   const { dataValues: assetDetails } = assetInWallet.dataValues.Asset_Customers
   if (assetDetails.quantity < payload.qtdeAtivo) {
-    const err = new Error(errMsgs.notEnoughAssetQuantity)
-    err.status = StatusCodes.NOT_ACCEPTABLE
-    throw err
+    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.notEnoughAssetQuantity)
   }
   const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'sell')
   const newAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}
