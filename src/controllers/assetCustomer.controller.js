@@ -3,7 +3,12 @@ const assetCustomerService = require('../services/assetCustomer.service')
 
 const buyOrder = async (req, res) => {
   const newAssetCustomerData = await assetCustomerService.buyOrder(req.body)
-  res.status(StatusCodes.CREATED).json(newAssetCustomerData)
+  res.status(StatusCodes.OK).json(newAssetCustomerData)
 }
 
-module.exports = {buyOrder}
+const sellOrder = async (req, res) => {
+  const newAssetCustomerData = await assetCustomerService.sellOrder(req.body)
+  res.status(StatusCodes.OK).json(newAssetCustomerData)
+}
+
+module.exports = {buyOrder, sellOrder}

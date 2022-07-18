@@ -3,5 +3,7 @@
   "quantityTooHigh": "No momento não há ordens de venda suficientes para executar a operação",
   "nonNumericalQuantity": "O campo quantidade deve possuir valor numérico",
   "invalidEmailOrPassword": "Email ou Senha inválidos",
-  "tokenMustBeProvided": "É necessário o envio do token de autorização"
+  "tokenMustBeProvided": "É necessário o envio do token de autorização",
+  "youDontHaveThatAsset": "Você não possui o ativo o qual está tentando vender",
+  "notEnoughAssetQuantity": "Você não possui essa quantidade de ativos"
 }

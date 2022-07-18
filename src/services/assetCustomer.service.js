@@ -5,15 +5,15 @@ const b3MockApi = require('../utils/b3MockApi')
 const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
 
-const checkAssetInWallet = ({ assets },codAtivo) => {
+const findAssetInWallet = ({ assets },codAtivo) => {
   const foundAsset = assets.find(({dataValues}) => dataValues.asset_code === codAtivo)
   return foundAsset
 }
 
-const updateAssetQuantity = async ({dataValues}, {qtdeAtivo, codCliente}) => {
+const updateAssetQuantity = async ({dataValues}, {qtdeAtivo, codCliente}, orderType) => {
   const {id: assetId} = dataValues
   const { dataValues: assetDetails } = dataValues.Asset_Customers
-  const newQuantity = assetDetails.quantity + qtdeAtivo
+  const newQuantity = orderType === 'buy'? assetDetails.quantity + qtdeAtivo: assetDetails.quantity - qtdeAtivo
   await assetCustomers.update({ quantity: newQuantity },
     {
       where: {
@@ -31,9 +31,9 @@ const createAssetInWallet = async ({codAtivo, codCliente, qtdeAtivo}) => {
   return insertedRecord
 }
 
-const handleAssetScenarios = async (assetInWallet, payload) => {
+const handleBuyAssetScenarios = async (assetInWallet, payload) => {
   if (assetInWallet) {
-    const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload)
+    const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'buy')
     const updatedAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}
     return updatedAssetRecord
   }
@@ -41,16 +41,46 @@ const handleAssetScenarios = async (assetInWallet, payload) => {
   return newAssetRecord
 }
 
-const buyOrder = async (payload) => {
-  const b3Response = b3MockApi(payload)
-  if (b3Response.status !== StatusCodes.OK) {
-    throw b3Response
-  } 
-  const { codCliente, codAtivo } = payload
-  const customerAssets = await customerService.getCustomerAssets(codCliente)
-  const assetInWallet = checkAssetInWallet(customerAssets, codAtivo)
-  const newAssetRecord = await handleAssetScenarios(assetInWallet, payload)
+const handleSellAssetScenarios = async (assetInWallet, payload) => {
+  if (!assetInWallet) {
+    const err = new Error(errMsgs.youDontHaveThatAsset)
+    err.status = StatusCodes.NOT_ACCEPTABLE
+    throw err
+  }
+  const { dataValues: assetDetails } = assetInWallet.dataValues.Asset_Customers
+  if (assetDetails.quantity < payload.qtdeAtivo) {
+    const err = new Error(errMsgs.notEnoughAssetQuantity)
+    err.status = StatusCodes.NOT_ACCEPTABLE
+    throw err
+  }
+  const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'sell')
+  const newAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}
   return newAssetRecord
 }
 
-module.exports = {buyOrder}
+const requestOrderB3 = (payload) => {
+  const b3Response = b3MockApi(payload)
+  if (b3Response.status !== StatusCodes.OK) {
+    throw b3Response
+  }
+}
+
+const buyOrder = async (payload) => {
+  requestOrderB3(payload)
+  const { codCliente, codAtivo } = payload
+  const customerAssets = await customerService.getCustomerAssets(codCliente)
+  const assetInWallet = findAssetInWallet(customerAssets, codAtivo)
+  const newAssetRecord = await handleBuyAssetScenarios(assetInWallet, payload)
+  return newAssetRecord
+}
+
+const sellOrder = async (payload) => {
+  requestOrderB3(payload)
+  const {codCliente, codAtivo} = payload
+  const customerAssets = await customerService.getCustomerAssets(codCliente)
+  const assetInWallet = findAssetInWallet(customerAssets, codAtivo)
+  const newAssetRecord = await handleSellAssetScenarios(assetInWallet, payload)
+  return newAssetRecord
+}
+
+module.exports = {buyOrder, sellOrder}
