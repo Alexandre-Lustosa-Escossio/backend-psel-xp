@@ -59,16 +59,16 @@ const requestOrderB3 = (payload) => {
 }
 
 const buyOrder = async (payload) => {
-  requestOrderB3(payload)
   const { codCliente, codAtivo } = payload
   const customerAssets = await customerService.getCustomerAssets(codCliente)
   const assetInWallet = findAssetInWallet(customerAssets, codAtivo)
+  // Fazer uma transaction
+  await orderPlacementService.createBuyOrder(payload)
   const newAssetRecord = await handleBuyAssetScenarios(assetInWallet, payload)
   return newAssetRecord
 }
 
 const sellOrder = async (payload) => {
-  requestOrderB3(payload)
   const {codCliente, codAtivo} = payload
   const customerAssets = await customerService.getCustomerAssets(codCliente)
   const assetInWallet = findAssetInWallet(customerAssets, codAtivo)
