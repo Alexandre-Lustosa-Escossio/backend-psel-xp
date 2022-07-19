@@ -1,4 +1,4 @@
-const { order_placement: orderPlacement } = require('../db/models')
+const { Order_Placements: orderPlacement } = require('../db/models')
 const financialDataApiRequest = require('../utils/financialDataApiRequests')
 
 const assembleObject = ({codAtivo, qtdeAtivo,codCliente }, assetId, price) => {
@@ -13,7 +13,7 @@ const assembleObject = ({codAtivo, qtdeAtivo,codCliente }, assetId, price) => {
 }
 
 const createSellOrder = async (payload, assetId) => {
-  const price = await financialDataApiRequest.getAssetPrice(codAtivo)
+  const price = await financialDataApiRequest.getAssetPrice(payload.codAtivo)
   const orderPlacementObj = assembleObject(payload, assetId, price)
   await orderPlacement.create(orderPlacementObj)
 }

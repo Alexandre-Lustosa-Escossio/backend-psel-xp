@@ -10,5 +10,5 @@ router.get('/ativos/:id', customerController.getCustomerAssets)
 
 router.post('/login', customerController.signInCustomer)
 
-router.use(errorHandler)
+//router.use(errorHandler)
 module.exports = router;

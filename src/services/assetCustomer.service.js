@@ -73,11 +73,10 @@ const sellOrder = async (payload) => {
   const customerAssets = await customerService.getCustomerAssets(codCliente)
   const assetInWallet = findAssetInWallet(customerAssets, codAtivo)
   await validateSellAssetScenarios(assetInWallet, payload)
-  return assetInWallet
-
-  /* await orderPlacementService.createSellOrder(payload, assetInWallet )
+  //Fazer uma transaction
+  await orderPlacementService.createSellOrder(payload, assetInWallet.id )
   const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'sell')
-  const newAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}*/
+  const newAssetRecord = {...payload, qtdeAtivo: newAssetQuantity}
   return newAssetRecord
 }
 
