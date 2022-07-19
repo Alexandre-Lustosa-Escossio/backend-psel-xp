@@ -1,9 +1,9 @@
-const assetController = require('../../src/controllers/asset.controller')
+const assetController = require('../../../src/controllers/asset.controller')
 const chai = require('chai')
 const sinon = require('sinon')
 chai.use(require('sinon-chai'))
 const { expect } = require('chai')
-const assetService = require('../../src/services/asset.service')
+const assetService = require('../../../src/services/asset.service')
 const { StatusCodes } = require('http-status-codes')
 
 const mockReturn = {
