@@ -1,6 +1,6 @@
 const {validateQuantity, errorHandler, tokenValidator }  = require("./middlewares/");
 const Router = require("express");
-const {assetCustomerController, customerController, assetController} = require("./controllers/");
+const {assetCustomerController, customerController, assetController, checkingAccountController} = require("./controllers/");
 const router = Router();
 
 router.post('/investimentos/compra', tokenValidator ,validateQuantity, assetCustomerController.buyOrder)
@@ -10,7 +10,9 @@ router.get('/cliente/:id', customerController.getCustomerAssets)
 
 router.get('/ativos/:codAtivo', assetController.getByCode)
 
+router.post('/conta/deposito', checkingAccountController.createDepositOrder) 
+
 router.post('/login', customerController.signInCustomer)
 
-router.use(errorHandler)
+//router.use(errorHandler)
 module.exports = router;
