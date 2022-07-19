@@ -11,6 +11,7 @@ router.get('/cliente/:id', customerController.getCustomerAssets)
 router.get('/ativos/:codAtivo', assetController.getByCode)
 
 router.post('/conta/deposito', validateCashAmount, checkingAccountController.createDepositOrder) 
+router.post('/conta/saque', validateCashAmount, checkingAccountController.createWithdrawalOrder)
 
 router.post('/login', customerController.signInCustomer)
 

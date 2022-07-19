@@ -1,15 +1,42 @@
+const { StatusCodes } = require('http-status-codes')
 const {Checking_Accounts: checkingAccount} = require('../db/models')
+const raiseError = require('../utils/raiseError')
+const errMsgs = require('../utils/errorMessages.json')
 
-const createDepositOrder = async ({ CodCliente, Valor }) => {
-  const customerBalanceData = await checkingAccount.findOne({where: {customer_id: CodCliente}})
-  const newBalance = customerBalanceData.balance + Valor
-  const newCustomerBalance = await checkingAccount.update({ balance: newBalance },
-    {
-      where: {
-        customer_id: CodCliente
-      }
-    })
-  return newCustomerBalance
+const handleCashBalanceScenarios = (currBalance, withdrawalAmount) => {
+  if (currBalance < withdrawalAmount) {
+    raiseError(StatusCodes.CONFLICT, errMsgs.notEnoughBalance)
+  }
+  return currBalance - withdrawalAmount
 }
 
-module.exports = {createDepositOrder}
+const findById = async (customerId) => {
+  const customerBalanceData = await checkingAccount.findOne({where: {customer_id: customerId}})
+  return customerBalanceData
+}
+
+const updateBalance = async (newBalance, customerId) => {
+  const affectedRows = await checkingAccount.update({ balance: newBalance },
+    {
+      where: {
+        customer_id: customerId
+      }
+    })
+  return affectedRows
+}
+
+const createDepositOrder = async ({ CodCliente, Valor }) => {
+  const customerBalanceData = await findById(CodCliente)
+  const newBalance = customerBalanceData.balance + Valor
+  const affectedRows = await updateBalance(newBalance, CodCliente)
+  return affectedRows
+}
+
+const createWithdrawalOrder = async ({ CodCliente, Valor }) => {
+  const customerBalanceData = await findById(CodCliente)
+  const newBalance = handleCashBalanceScenarios(customerBalanceData.balance, Valor)
+  const affectedRows = await updateBalance(newBalance, CodCliente)
+  return affectedRows
+}
+
+module.exports = {createDepositOrder, createWithdrawalOrder}

@@ -7,4 +7,9 @@ const createDepositOrder = async (req, res) => {
   res.status(StatusCodes.OK).json()
 }
 
-module.exports = {createDepositOrder}
+const createWithdrawalOrder = async (req, res) => {
+  await checkingAccountService.createWithdrawalOrder(req.body)
+  res.status(StatusCodes.OK).json()
+}
+
+module.exports = {createDepositOrder, createWithdrawalOrder}

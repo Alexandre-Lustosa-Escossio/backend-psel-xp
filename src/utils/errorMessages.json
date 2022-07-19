@@ -8,5 +8,6 @@
   "notEnoughAssetQuantity": "Você não possui essa quantidade de ativos",
   "noneInvestedYet": "Você ainda não possui nenhum investimento",
   "cashAmountTooLow": "O valor depositado deve ser maior que 0 (zero)",
-  "nonNumericalCashAmount": "O campo valor deve possuir valor numérico"
+  "nonNumericalCashAmount": "O campo valor deve possuir valor numérico",
+  "notEnoughBalance": "Você não possui saldo o suficiente para realizar esta operação"
 }
