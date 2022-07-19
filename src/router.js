@@ -1,4 +1,4 @@
-const {validateQuantity, errorHandler, tokenValidator }  = require("./middlewares/");
+const {validateQuantity, errorHandler, tokenValidator, validateCashAmount }  = require("./middlewares/");
 const Router = require("express");
 const {assetCustomerController, customerController, assetController, checkingAccountController} = require("./controllers/");
 const router = Router();
@@ -10,9 +10,9 @@ router.get('/cliente/:id', customerController.getCustomerAssets)
 
 router.get('/ativos/:codAtivo', assetController.getByCode)
 
-router.post('/conta/deposito', checkingAccountController.createDepositOrder) 
+router.post('/conta/deposito', validateCashAmount, checkingAccountController.createDepositOrder) 
 
 router.post('/login', customerController.signInCustomer)
 
-//router.use(errorHandler)
+router.use(errorHandler)
 module.exports = router;
