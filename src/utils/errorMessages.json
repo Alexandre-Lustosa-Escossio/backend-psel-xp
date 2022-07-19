@@ -5,5 +5,6 @@
   "invalidEmailOrPassword": "Email ou Senha inválidos",
   "tokenMustBeProvided": "É necessário o envio do token de autorização",
   "youDontHaveThatAsset": "Você não possui o ativo o qual está tentando vender",
-  "notEnoughAssetQuantity": "Você não possui essa quantidade de ativos"
+  "notEnoughAssetQuantity": "Você não possui essa quantidade de ativos",
+  "noneInvestedYet": "Você ainda não possui nenhum investimento"
 }

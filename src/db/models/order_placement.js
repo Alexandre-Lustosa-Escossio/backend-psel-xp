@@ -28,14 +28,16 @@ const OrderPlacement = (sequelize, DataTypes) => {
     }
   }, {timestamps: false})
 
-  OrderPlacement.associate(models => {
+  OrderPlacement.associate = (models) => {
     OrderPlacement.belongsTo(models.Customers, {
-      foreignKey: 'customer_id', as: 'order_placements'
+      foreignKey: 'customer_id', as: 'customer'
     })
     OrderPlacement.belongsTo(models.Assets, {
-      foreignKey: 'asset_id', as: 'order_placements'
+      foreignKey: 'asset_id', as: 'asset'
     })
-  })
+  }
 
   return OrderPlacement
 }
+
+module.exports = OrderPlacement

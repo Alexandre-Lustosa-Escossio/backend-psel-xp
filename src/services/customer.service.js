@@ -3,6 +3,7 @@ const { generateToken } = require('../utils/tokenGenerator')
 const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
 const financialDataApiRequests = require('../utils/financialDataApiRequests')
+const raiseError = require('../utils/raiseError')
 
 
 const requestPrice = async (asset) => {
@@ -24,6 +25,9 @@ const getCustomerAssets = async (customerId) => {
     where: { id: customerId },
     include:[{model: Assets, as: 'assets', through: {attributes: ['quantity']}}]
   })
+  if (!customerAssets) {
+    raiseError(StatusCodes.NOT_FOUND, errMsgs.noneInvestedYet)
+  }
   customerAssets.assets = await appendAssetsPrices(customerAssets)
   return customerAssets
 }
