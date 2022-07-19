@@ -9,27 +9,49 @@ const assetService = require('../../../src/services/asset.service')
 
 const mockPrice = 97.77
 const mockAssetsReturn = {
-  "id": 1,
-  "asset_code": "xpbr31",
-  "asset_name": "XP INC (BDR)",
+  dataValues: {
+    "id": 1,
+    "asset_code": "xpbr31",
+    "asset_name": "XP INC (BDR)",
+  }
 }
+const codAtivo = 'xpbr31'
 
-const spy = sinon.spy(sinon.stub(Assets, 'findOne').returns(mockAssetsReturn))
-sinon.stub(financialDataApiRequests, 'getAssetPrice').returns(mockPrice)
 
 describe('getByCode method tests', () => {
-  const codAtivo = 1
+  
+  beforeEach(() => {
+    sinon.stub(Assets, 'findOne').returns(mockAssetsReturn)
+    sinon.stub(financialDataApiRequests, 'getAssetPrice').returns(mockPrice)
+  });
+
+  afterEach(() => {
+    sinon.restore()
+  });
+
+  let response = {}
+  
+  describe('when called with no second parameter (default false)', () => {
+    it('should call Assets findOne method once', async () => {
+      response = await assetService.getByCode(codAtivo,false)
+      expect(Assets.findOne.calledOnce).to.be.true
+    })
+    it('Should return an object with the right format without the prices', async () => {
+      response = await assetService.getByCode(codAtivo, false)
+      expect(response.dataValues).to.be.deep.equal({...mockAssetsReturn.dataValues})
+      expect(response.dataValues.Valor).to.be.undefined
+    });
+  });
+
   describe('when called with true parameter', () => {
+    it('should call Assets findOne and financialDataApi getAssetPrice methods once', async () => {
+      await assetService.getByCode(codAtivo,true)
+      expect(Assets.findOne.calledOnce).to.be.true
+      expect(financialDataApiRequests.getAssetPrice.calledOnce).to.be.true
+    })
     it('Should return an object with the right format', async () => {
-      const response = await assetService.getByCode(codAtivo,true)
-      expect(response).to.be.deep.equal({...mockAssetsReturn, Valor: mockPrice})
+      response = await assetService.getByCode(codAtivo,true)
+      expect(response.dataValues).to.be.deep.equal({...mockAssetsReturn.dataValues, Valor: mockPrice})
     })
   });
-  /* describe('when called with no second parameter (default false)', () => {
-    it('Should return an object with the right format without the prices', async () => {
-      const response2 = await assetService.getByCode(codAtivo, false)
-      expect(response2).to.be.deep.equal(mockAssetsReturn)
-      expect(response2.Valor).to.be.undefined
-    });
-  }); */
 });

@@ -13,16 +13,20 @@ const mockReturn = {
   "Valor": 97.77
 }
 
-sinon.stub(assetService, 'getByCode').returns(mockReturn)
 
 describe('getByCode method tests', () => {
   const response = {}
   const request = {}
   
-  before(() => {
+  beforeEach(() => {
+    sinon.stub(assetService, 'getByCode').returns(mockReturn)
     request.params = {codAtivo: 1}
     response.status = sinon.stub().returns(response)
     response.json = sinon.stub().returns(mockReturn)
+  });
+
+  afterEach(() => {
+    sinon.restore()
   });
 
   it('should call assetService getByCode method with two parameters: codAtivo and true', async () => {
