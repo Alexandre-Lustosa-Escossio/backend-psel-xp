@@ -36,3 +36,31 @@ describe('createDepositOrder tests', () => {
   });
 
 });
+
+describe('createWithdrawalOrder tests', () => {
+  const response = {}
+  const request = {}
+
+  beforeEach(() => {
+    sinon.stub(checkingAccountService, 'createWithdrawalOrder')
+    request.body = {codCliente: 1, Valor: 500}
+    response.status = sinon.stub().returns(response)
+    response.json = sinon.stub().returns()
+  });
+
+  afterEach(() => {
+    sinon.restore()
+  });
+
+  it('should call checkingAccountService createDepositOrder method once with correct parameters', async () => {
+    await checkingAccountController.createWithdrawalOrder(request, response)
+    expect(checkingAccountService.createWithdrawalOrder.calledOnce).to.be.true;
+    expect(checkingAccountService.createWithdrawalOrder.calledWith(request.body)).to.be.true;
+  });
+  
+  it('should return status code OK and an empty response', async () => {
+    await checkingAccountController.createWithdrawalOrder(request, response)
+    expect(response.status).calledWith(StatusCodes.OK);
+    expect(response.json).calledWith()
+  });
+});
