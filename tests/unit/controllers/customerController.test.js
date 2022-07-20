@@ -7,7 +7,7 @@ const { StatusCodes } = require('http-status-codes')
 const { customerController } = require('../../../src/controllers')
 
 
-describe.only('getCustomerAssets tests', () => {
+describe('getCustomerAssets tests', () => {
   const mockServiceReturn = {
     id: 1,
     assets: [{
@@ -47,3 +47,30 @@ describe.only('getCustomerAssets tests', () => {
     expect(response.json.calledOnce).to.be.true
   });
 })
+
+describe('signIn tests', () => {
+  const response = {}
+  const request = {}
+  
+  beforeEach(() => {
+    sinon.stub(customerService, 'signInCustomer')
+    request.params = { id: 1 }
+    response.status = sinon.stub().returns(response)
+    response.json = sinon.stub().returns(response)
+  });
+
+  afterEach(() => {
+    sinon.restore()
+  });
+
+  it('should call customerService signInCustomer method and return an ok response', async () => {
+    await customerController.signInCustomer(request, response)
+    expect(customerService.signInCustomer).calledOnce
+    expect(response.status.calledOnce).to.be.true
+    expect(response.status).calledWith(StatusCodes.OK)
+    expect(response.json.calledOnce).to.be.true
+  });
+})
+
+
+
