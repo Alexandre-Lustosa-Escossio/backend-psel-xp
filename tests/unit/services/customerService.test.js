@@ -59,7 +59,7 @@ describe('customerService getCustomerAssets method tests', () => {
 })
 
 
-describe.only('customerService signInCustomer method tests', () => {
+describe('customerService signInCustomer method tests', () => {
   let modelStub
   beforeEach(() => {
     modelStub = sinon.stub(Customers, 'findOne').returns(mockModelReturn)
