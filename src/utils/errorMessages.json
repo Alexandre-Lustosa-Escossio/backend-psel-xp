@@ -9,5 +9,6 @@
   "noneInvestedYet": "Você ainda não possui nenhum investimento",
   "cashAmountTooLow": "O valor depositado deve ser maior que 0 (zero)",
   "nonNumericalCashAmount": "O campo valor deve possuir valor numérico",
-  "notEnoughBalance": "Você não possui saldo o suficiente para realizar esta operação"
+  "notEnoughBalance": "Você não possui saldo o suficiente para realizar esta operação",
+  "customerNotFound": "Cliente não encontrado"
 }

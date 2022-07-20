@@ -82,9 +82,9 @@ router.get('/ativos/:codAtivo', assetController.getByCode)
  *  name: Conta Corrente
  *  description: Endpoints voltados para operações na conta corrente
  * */
-
-router.post('/conta/deposito', validateCashAmount, checkingAccountController.createDepositOrder) 
-router.post('/conta/saque', validateCashAmount, checkingAccountController.createWithdrawalOrder)
+router.get('/conta/:codCliente',tokenValidator, checkingAccountController.getById)
+router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder) 
+router.post('/conta/saque', tokenValidator,validateCashAmount, checkingAccountController.createWithdrawalOrder)
 
 /** 
  * @swagger

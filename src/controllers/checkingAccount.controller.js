@@ -12,4 +12,10 @@ const createWithdrawalOrder = async (req, res) => {
   res.status(StatusCodes.OK).json()
 }
 
-module.exports = {createDepositOrder, createWithdrawalOrder}
+const getById = async (req, res) => { 
+  const { codCliente } = req.params
+  const customerBalance = await checkingAccountService.getById(codCliente)
+  res.status(StatusCodes.OK).json(customerBalance)
+}
+
+module.exports = {createDepositOrder, createWithdrawalOrder, getById}
