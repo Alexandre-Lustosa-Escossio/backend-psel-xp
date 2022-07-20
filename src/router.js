@@ -55,8 +55,8 @@ const router = Router();
   *      
 */
 
-router.post('/investimentos/compra', tokenValidator ,validateQuantity, assetCustomerController.buyOrder)
-router.post('/investimentos/venda', tokenValidator, validateQuantity, assetCustomerController.sellOrder)
+router.post('/investimentos/comprar', tokenValidator ,validateQuantity, assetCustomerController.buyOrder)
+router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCustomerController.sellOrder)
 
 /** 
  * @swagger
@@ -65,7 +65,7 @@ router.post('/investimentos/venda', tokenValidator, validateQuantity, assetCusto
  *  description: Endpoints voltados para informações do cliente
  * */
 
-router.get('/cliente/:id', customerController.getCustomerAssets)
+router.get('/clientes/:id', customerController.getCustomerAssets)
 
 /** 
  * @swagger

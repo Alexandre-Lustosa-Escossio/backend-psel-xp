@@ -1,6 +1,5 @@
 const {Asset_Customers: assetCustomers, Assets, Customers} = require('../db/models')
 const {assetService, customerService, orderPlacementService} = require('./')
-const b3MockApi = require('../utils/b3MockApi')
 const errMsgs = require('../utils/errorMessages.json')
 const { StatusCodes } = require('http-status-codes')
 const raiseError = require('../utils/raiseError')
@@ -48,13 +47,6 @@ const validateSellAssetScenarios = async (assetInWallet, payload) => {
   const { dataValues: assetDetails } = assetInWallet.dataValues.Asset_Customers
   if (assetDetails.quantity < payload.qtdeAtivo) {
     raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.notEnoughAssetQuantity)
-  }
-}
-
-const requestOrderB3 = (payload) => {
-  const b3Response = b3MockApi(payload)
-  if (b3Response.status !== StatusCodes.OK) {
-    throw b3Response
   }
 }
 
