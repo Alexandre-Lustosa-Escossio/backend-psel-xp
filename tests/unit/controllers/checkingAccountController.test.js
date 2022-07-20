@@ -8,7 +8,7 @@ const { Assets } = require('../../../src/db/models')
 const { checkingAccountController } = require('../../../src/controllers')
 const { checkingAccountService } = require('../../../src/services')
 
-describe.skip('createDepositOrder tests', () => {
+describe('createDepositOrder tests', () => {
   const response = {}
   const request = {}
   
@@ -37,7 +37,7 @@ describe.skip('createDepositOrder tests', () => {
 
 });
 
-describe.skip('createWithdrawalOrder tests', () => {
+describe('createWithdrawalOrder tests', () => {
   const response = {}
   const request = {}
 
