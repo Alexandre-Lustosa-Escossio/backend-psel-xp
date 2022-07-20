@@ -4,17 +4,17 @@ const Asset = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     asset_code: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     asset_name: {
       allowNull: false,
-      type: DataTypes.STRING
-    }
-  }, { timestamps: false })
+      type: DataTypes.STRING,
+    },
+  }, { timestamps: false });
 
   /* Asset.associate(models => {
     Asset.hasMany(models.Order_Placements, {
@@ -22,9 +22,7 @@ const Asset = (sequelize, DataTypes) => {
     })
   }) */
     
-    return Asset
+    return Asset;
+};
 
-}
-
-
-module.exports = Asset
+module.exports = Asset;

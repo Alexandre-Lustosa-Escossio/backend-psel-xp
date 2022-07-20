@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Checking_Accounts', {
@@ -8,17 +7,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Customers',
-          key: 'id'
+          key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       balance: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Checking_Accounts');
-  }
+  },
 };

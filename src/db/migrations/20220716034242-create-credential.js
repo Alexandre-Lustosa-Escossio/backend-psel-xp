@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Credentials', {
@@ -9,17 +8,17 @@ module.exports = {
         field: 'customer_id',
         references: {
           model: 'Customers',
-          key: 'id'
+          key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Credentials');
-  }
+  },
 };

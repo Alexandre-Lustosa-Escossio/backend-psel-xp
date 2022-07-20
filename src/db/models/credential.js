@@ -4,20 +4,20 @@ const Credential = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     password: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
-  }, { timestamps: false })
+  }, { timestamps: false });
   
   Credential.associate = (models) => {
     Credential.belongsTo(models.Customers,
-    {foreignKey: 'customer_id', as: 'credential'})
-  }
+    { foreignKey: 'customer_id', as: 'credential' });
+  };
 
-  return Credential
-}
+  return Credential;
+};
 
-module.exports = Credential
+module.exports = Credential;

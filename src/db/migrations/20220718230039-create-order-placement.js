@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Order_Placements', {
@@ -6,43 +5,43 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       customer_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Customers',
-          foreignKey: 'id'
+          foreignKey: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       asset_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Assets',
-          foreignKey: 'id'
+          foreignKey: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       price: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
       type: {
         type: Sequelize.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Order_Placements');
-  }
+  },
 };

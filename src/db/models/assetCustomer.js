@@ -1,7 +1,7 @@
 const AssetCustomer = (sequelize, DataTypes) => {
   const AssetCustomer = sequelize.define('Asset_Customers', {
-    quantity: {type: DataTypes.INTEGER}
-  }, {timestamps: false})
+    quantity: { type: DataTypes.INTEGER },
+  }, { timestamps: false });
 
   AssetCustomer.associate = (models) => {
     models.Assets.belongsToMany(models.Customers,
@@ -9,18 +9,18 @@ const AssetCustomer = (sequelize, DataTypes) => {
         foreignKey: 'asset_id',
         as: 'customer',
         through: AssetCustomer,
-        otherKey: 'customer_id'
-      })
+        otherKey: 'customer_id',
+      });
     models.Customers.belongsToMany(models.Assets,
       {
         foreignKey: 'customer_id',
         as: 'assets',
         through: AssetCustomer,
-        otherKey: 'asset_id'
-      })
-  }
+        otherKey: 'asset_id',
+      });
+  };
 
-  return AssetCustomer
-}
+  return AssetCustomer;
+};
 
-module.exports =  AssetCustomer
+module.exports = AssetCustomer;

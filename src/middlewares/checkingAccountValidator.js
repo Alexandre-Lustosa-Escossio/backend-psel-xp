@@ -1,16 +1,16 @@
-const { StatusCodes } = require("http-status-codes")
-const raiseError = require("../utils/raiseError")
-const errMsgs = require('../utils/errorMessages.json')
+const { StatusCodes } = require('http-status-codes');
+const raiseError = require('../utils/raiseError');
+const errMsgs = require('../utils/errorMessages.json');
 
 const validateCashAmount = (req, res, next) => {
-  const {Valor} = req.body
+  const { Valor } = req.body;
   if (!Valor || Valor < 0) {
-    raiseError(StatusCodes.UNPROCESSABLE_ENTITY, errMsgs.cashAmountTooLow)
+    raiseError(StatusCodes.UNPROCESSABLE_ENTITY, errMsgs.cashAmountTooLow);
   }
   if (typeof Valor !== 'number') {
-    raiseError(StatusCodes.UNPROCESSABLE_ENTITY, errMsgs.nonNumericalCashAmount)
+    raiseError(StatusCodes.UNPROCESSABLE_ENTITY, errMsgs.nonNumericalCashAmount);
   }
-  next()
-}
+  next();
+};
 
-module.exports = {validateCashAmount}
+module.exports = { validateCashAmount };

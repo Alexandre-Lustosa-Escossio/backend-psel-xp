@@ -1,23 +1,23 @@
 const CheckingAccount = (sequelize, DataTypes) => {
-  const CheckingAccount = sequelize.define("Checking_Accounts", {
+  const CheckingAccount = sequelize.define('Checking_Accounts', {
     customer_id: {
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     balance: {
       allowNull: false,
-      type: DataTypes.INTEGER
-    } ,
-  }, { timestamps: false })
+      type: DataTypes.INTEGER,
+    },
+  }, { timestamps: false });
   
   CheckingAccount.associate = (models) => {
     CheckingAccount.belongsTo(models.Customers,
-    {foreignKey: 'customer_id', as: 'checking_account'})
-  }
+    { foreignKey: 'customer_id', as: 'checking_account' });
+  };
 
-  return CheckingAccount
-}
+  return CheckingAccount;
+};
 
-module.exports = CheckingAccount
+module.exports = CheckingAccount;

@@ -1,64 +1,63 @@
-const chai = require('chai')
-const sinon = require('sinon')
-chai.use(require('sinon-chai'))
-const { expect } = require('chai')
-const { StatusCodes } = require('http-status-codes')
-const { checkingAccountController } = require('../../../src/controllers')
-const { checkingAccountService } = require('../../../src/services')
+const chai = require('chai');
+const sinon = require('sinon');
+chai.use(require('sinon-chai'));
+const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
+const { checkingAccountController } = require('../../../src/controllers');
+const { checkingAccountService } = require('../../../src/services');
 
-describe('createDepositOrder tests', () => {
-  const response = {}
-  const request = {}
+describe('createDepositOrder tests', function () {
+  const response = {};
+  const request = {};
   
-  beforeEach(() => {
-    sinon.stub(checkingAccountService, 'createDepositOrder')
-    request.body = {codCliente: 1, Valor: 500}
-    response.status = sinon.stub().returns(response)
-    response.json = sinon.stub().returns()
+  beforeEach(function () {
+    sinon.stub(checkingAccountService, 'createDepositOrder');
+    request.body = { codCliente: 1, Valor: 500 };
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
   });
 
-  afterEach(() => {
-    sinon.restore()
+  afterEach(function () {
+    sinon.restore();
   });
 
-  it('should call checkingAccountService createDepositOrder method once with correct parameters', async () => {
-    await checkingAccountController.createDepositOrder(request, response)
+  it('should call checkingAccountService createDepositOrder method once with correct parameters', async function () {
+    await checkingAccountController.createDepositOrder(request, response);
     expect(checkingAccountService.createDepositOrder.calledOnce).to.be.true;
     expect(checkingAccountService.createDepositOrder.calledWith(request.body)).to.be.true;
   });
   
-  it('should return status code OK and an empty response', async () => {
-    await checkingAccountController.createDepositOrder(request, response)
+  it('should return status code OK and an empty response', async function () {
+    await checkingAccountController.createDepositOrder(request, response);
     expect(response.status).calledWith(StatusCodes.OK);
-    expect(response.json).calledWith()
+    expect(response.json).calledWith();
   });
-
 });
 
-describe('createWithdrawalOrder tests', () => {
-  const response = {}
-  const request = {}
+describe('createWithdrawalOrder tests', function () {
+  const response = {};
+  const request = {};
 
-  beforeEach(() => {
-    sinon.stub(checkingAccountService, 'createWithdrawalOrder')
-    request.body = {codCliente: 1, Valor: 500}
-    response.status = sinon.stub().returns(response)
-    response.json = sinon.stub().returns()
+  beforeEach(function () {
+    sinon.stub(checkingAccountService, 'createWithdrawalOrder');
+    request.body = { codCliente: 1, Valor: 500 };
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
   });
 
-  afterEach(() => {
-    sinon.restore()
+  afterEach(function () {
+    sinon.restore();
   });
 
-  it('should call checkingAccountService createDepositOrder method once with correct parameters', async () => {
-    await checkingAccountController.createWithdrawalOrder(request, response)
+  it('should call checkingAccountService createDepositOrder method once with correct parameters', async function () {
+    await checkingAccountController.createWithdrawalOrder(request, response);
     expect(checkingAccountService.createWithdrawalOrder.calledOnce).to.be.true;
     expect(checkingAccountService.createWithdrawalOrder.calledWith(request.body)).to.be.true;
   });
   
-  it('should return status code OK and an empty response', async () => {
-    await checkingAccountController.createWithdrawalOrder(request, response)
+  it('should return status code OK and an empty response', async function () {
+    await checkingAccountController.createWithdrawalOrder(request, response);
     expect(response.status).calledWith(StatusCodes.OK);
-    expect(response.json).calledWith()
+    expect(response.json).calledWith();
   });
 });

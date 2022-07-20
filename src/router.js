@@ -1,6 +1,7 @@
-const {validateQuantity, errorHandler, tokenValidator, validateCashAmount }  = require("./middlewares/");
-const Router = require("express");
-const {assetCustomerController, customerController, assetController, checkingAccountController} = require("./controllers/");
+const Router = require('express');
+const { validateQuantity, errorHandler, tokenValidator, validateCashAmount } = require('./middlewares');
+const { assetCustomerController, customerController, assetController, checkingAccountController } = require('./controllers');
+
 const router = Router();
 
 /** 
@@ -55,8 +56,8 @@ const router = Router();
   *      
 */
 
-router.post('/investimentos/comprar', tokenValidator ,validateQuantity, assetCustomerController.buyOrder)
-router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCustomerController.sellOrder)
+router.post('/investimentos/comprar', tokenValidator, validateQuantity, assetCustomerController.buyOrder);
+router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCustomerController.sellOrder);
 
 /** 
  * @swagger
@@ -65,7 +66,7 @@ router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCust
  *  description: Endpoints voltados para informações do cliente
  * */
 
-router.get('/clientes/:id', customerController.getCustomerAssets)
+router.get('/clientes/:id', customerController.getCustomerAssets);
 
 /** 
  * @swagger
@@ -74,7 +75,7 @@ router.get('/clientes/:id', customerController.getCustomerAssets)
  *  description: Endpoints voltados para informações dos ativos
  * */
 
-router.get('/ativos/:codAtivo', assetController.getByCode)
+router.get('/ativos/:codAtivo', assetController.getByCode);
 
 /** 
  * @swagger
@@ -82,9 +83,9 @@ router.get('/ativos/:codAtivo', assetController.getByCode)
  *  name: Conta Corrente
  *  description: Endpoints voltados para operações na conta corrente
  * */
-router.get('/conta/:codCliente',tokenValidator, checkingAccountController.getById)
-router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder) 
-router.post('/conta/saque', tokenValidator,validateCashAmount, checkingAccountController.createWithdrawalOrder)
+router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getById);
+router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder); 
+router.post('/conta/saque', tokenValidator, validateCashAmount, checkingAccountController.createWithdrawalOrder);
 
 /** 
  * @swagger
@@ -93,7 +94,7 @@ router.post('/conta/saque', tokenValidator,validateCashAmount, checkingAccountCo
  *  description: Endpoints voltados para operações de cadastro e login
  * */
 
-router.post('/login', customerController.signInCustomer)
+router.post('/login', customerController.signInCustomer);
 
-router.use(errorHandler)
+router.use(errorHandler);
 module.exports = router;

@@ -4,28 +4,28 @@ const Customer = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
-      type: DataTypes.NUMBER
+      type: DataTypes.NUMBER,
     },
     customer_name: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     email: {
       allowNull: false,
-      type: DataTypes.STRING
-    }
-  }, {timestamps: false})
+      type: DataTypes.STRING,
+    },
+  }, { timestamps: false });
 
   Customer.associate = (models) => {
     Customer.hasOne(models.Credentials,
-      { foreignKey: 'customer_id', as: 'credentials' })
+      { foreignKey: 'customer_id', as: 'credentials' });
     Customer.hasOne(models.Checking_Accounts,
-      { foreignKey: 'customer_id', as: 'checking_account' })
+      { foreignKey: 'customer_id', as: 'checking_account' });
     /* Customer.hasOne(models.Order_Placements),
       {foreignKey: 'customer_id', as: 'order_placements'} */
-  }
+  };
 
-  return Customer
-} 
+  return Customer;
+}; 
 
-module.exports = Customer
+module.exports = Customer;

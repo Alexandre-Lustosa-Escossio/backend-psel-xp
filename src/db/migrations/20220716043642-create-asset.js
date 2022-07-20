@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Assets', {
@@ -6,17 +5,17 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       asset_code: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       asset_name: {
-        type: Sequelize.STRING
-      }
+        type: Sequelize.STRING,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Assets');
-  }
+  },
 };

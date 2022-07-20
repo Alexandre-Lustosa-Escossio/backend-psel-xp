@@ -1,7 +1,7 @@
 const raiseError = (errorStatus, errorMessage) => {
-  const err = new Error(errorMessage)
-    err.status = errorStatus
-    throw err
-}
+  const err = new Error(errorMessage);
+    err.status = errorStatus;
+    throw err;
+};
 
-module.exports = raiseError
+module.exports = raiseError;

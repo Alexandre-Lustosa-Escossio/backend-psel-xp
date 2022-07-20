@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "test": "mocha ./tests/unit/**/*.test.js ",
-    "test:coverage": "nyc npm test"
+    "test:coverage": "nyc npm test",
+    "lint": "eslint --fix --no-inline-config --ext .js,.jsx --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "keywords": [],
   "author": "",
@@ -26,8 +27,6 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
-    "eslint": "^8.19.0",
-    "eslint-config-trybe-backend": "^1.0.4",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.19",
     "nyc": "^15.1.0",
