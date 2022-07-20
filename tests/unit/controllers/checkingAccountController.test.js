@@ -3,8 +3,6 @@ const sinon = require('sinon')
 chai.use(require('sinon-chai'))
 const { expect } = require('chai')
 const { StatusCodes } = require('http-status-codes')
-const financialDataApiRequests = require('../../../src/utils/financialDataApiRequests')
-const { Assets } = require('../../../src/db/models')
 const { checkingAccountController } = require('../../../src/controllers')
 const { checkingAccountService } = require('../../../src/services')
 

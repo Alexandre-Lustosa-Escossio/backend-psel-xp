@@ -33,7 +33,7 @@ describe('createDepositOrder method tests', () => {
   });
 })
 
-describe.only('createWithdrawalOrder method tests', () => {
+describe('createWithdrawalOrder method tests', () => {
   let findOneStub
   let updateStub
 
