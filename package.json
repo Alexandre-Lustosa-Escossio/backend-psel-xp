@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "test": "mocha ./tests/unit/**/*.test.js ",
-    "coverage": "nyc test"
+    "test:coverage": "nyc npm test"
   },
   "keywords": [],
   "author": "",
