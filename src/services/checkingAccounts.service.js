@@ -4,6 +4,9 @@ const raiseError = require('../utils/raiseError')
 const errMsgs = require('../utils/errorMessages.json')
 
 const handleCashBalanceScenarios = (currBalance, withdrawalAmount) => {
+  console.log('Aqui')
+  console.log(currBalance)
+  console.log(withdrawalAmount)
   if (currBalance < withdrawalAmount) {
     raiseError(StatusCodes.CONFLICT, errMsgs.notEnoughBalance)
   }
@@ -39,4 +42,5 @@ const createWithdrawalOrder = async ({ CodCliente, Valor }) => {
   return affectedRows
 }
 
-module.exports = {createDepositOrder, createWithdrawalOrder}
+
+module.exports = { createDepositOrder, createWithdrawalOrder, findById, updateBalance, handleCashBalanceScenarios }
