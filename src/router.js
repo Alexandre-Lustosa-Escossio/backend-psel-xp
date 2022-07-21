@@ -66,6 +66,7 @@ router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCust
  *  description: Endpoints voltados para informações do cliente
  * */
 
+router.post('/clientes/registro', customerController.registerCustomer);
 router.get('/clientes/:id', customerController.getCustomerAssets);
 
 /** 
@@ -83,9 +84,9 @@ router.get('/ativos/:codAtivo', assetController.getByCode);
  *  name: Conta Corrente
  *  description: Endpoints voltados para operações na conta corrente
  * */
-router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getById);
-router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder); 
 router.post('/conta/saque', tokenValidator, validateCashAmount, checkingAccountController.createWithdrawalOrder);
+router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder); 
+router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getById);
 
 /** 
  * @swagger

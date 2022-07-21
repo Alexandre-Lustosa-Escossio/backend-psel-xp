@@ -5,17 +5,8 @@ const { expect } = require('chai');
 const { Customers } = require('../../../src/db/models');
 const financialDataApiRequests = require('../../../src/utils/financialDataApiRequests');
 const customerService = require('../../../src/services/customer.service');
-const tokenGenerator = require('../../../src/utils/tokenGenerator');
+const handleHashes = require('../../../src/utils/handleHashes');
 
-const mockModelReturn = {
-  id: 1,
-  assets: [{
-    asset_code: 'xpbr31',
-    Asset_Customers: {
-      quantity: 1,
-    },
-  }],
-};
 
 const mockFinanceApiReturn = 100;
 
@@ -31,6 +22,15 @@ const mockServiceReturn = {
 };
 
 describe('customerService getCustomerAssets method tests', function () {
+  const mockModelReturn = {
+    id: 1,
+    assets: [{
+      asset_code: 'xpbr31',
+      Asset_Customers: {
+        quantity: 1,
+      },
+    }],
+  };
   let modelStub;
   let financeApiStub;
 
@@ -58,9 +58,23 @@ describe('customerService getCustomerAssets method tests', function () {
 });
 
 describe('customerService signInCustomer method tests', function () {
+  const mockModelReturn = {
+    id: 1,
+    assets: [{
+      asset_code: 'xpbr31',
+      Asset_Customers: {
+        quantity: 1,
+      },
+    }],
+    credentials: {
+      password: '123456',
+    },
+  };
   let modelStub;
+  let hashStub;
   beforeEach(function () {
     modelStub = sinon.stub(Customers, 'findOne').returns(mockModelReturn);
+    hashStub = sinon.stub(handleHashes, 'decrypt').returns(true);
   });
 
   afterEach(function () {
@@ -68,14 +82,15 @@ describe('customerService signInCustomer method tests', function () {
   });
 
   it('should call Customers findOne method once', async function () {
-    await customerService.signInCustomer({ email: '', password: '' });
+    await customerService.signInCustomer({ email: '', senha: '' });
     expect(modelStub.calledOnce).to.be.true;
+    expect(hashStub.calledOnce).to.be.true;
   }); 
   it('Should raise error if customer not found', async function () { 
     sinon.restore();
     sinon.stub(Customers, 'findOne').returns(null);
     try {
-      await customerService.signInCustomer({ email: '', password: '' });
+      await customerService.signInCustomer({ email: '', senha: '' });
     } catch (err) {
       expect(err.message).to.equal('Email ou Senha inválidos');
     }
