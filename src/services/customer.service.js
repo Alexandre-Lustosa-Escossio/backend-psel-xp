@@ -52,4 +52,14 @@ const signInCustomer = async (payload) => {
   return token;
 };
 
+const registerCustomer = async (payload) => { 
+  const { email, password } = payload;
+  const customerData = await Customers.findOne({ where: { email } });
+  if (customerData) {
+    raiseError(StatusCodes.CONFLICT, errMsgs.emailAlreadyExists);
+  }
+  const customer = await Customers.create(payload);
+  return { customer };
+}
+
 module.exports = { getCustomerAssets, signInCustomer };

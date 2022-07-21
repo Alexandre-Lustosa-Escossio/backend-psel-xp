@@ -25,4 +25,10 @@ const getCustomerAssets = async (req, res) => {
   res.status(StatusCodes.OK).json(assembledResponse);
 };
 
-module.exports = { signInCustomer, getCustomerAssets };
+const registerCustomer = async (req, res) => {
+  const { body } = req;
+  const customer = await customerService.registerCustomer(body);
+  res.status(StatusCodes.OK).json(customer);
+}
+
+module.exports = { signInCustomer, getCustomerAssets, registerCustomer };

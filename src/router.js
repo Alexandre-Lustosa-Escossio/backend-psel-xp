@@ -67,6 +67,7 @@ router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCust
  * */
 
 router.get('/clientes/:id', customerController.getCustomerAssets);
+router.post('/clientes/registro', customerController.registerCustomer);
 
 /** 
  * @swagger
