@@ -2,7 +2,6 @@ const CheckingAccount = (sequelize, DataTypes) => {
   const CheckingAccount = sequelize.define('Checking_Accounts', {
     customer_id: {
       primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
       type: DataTypes.INTEGER,
     },

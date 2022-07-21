@@ -1,6 +1,6 @@
 const { validateQuantity } = require('./assetOrderValidator');
 const errorHandler = require('./errorHandler');
-const { tokenValidator } = require('./tokenValidator');
+const { tokenValidator, checkIfCustomerIsOwner } = require('./tokenValidator');
 const { validateCashAmount } = require('./checkingAccountValidator');
 
 const index = {
@@ -8,6 +8,7 @@ const index = {
   errorHandler,
   tokenValidator,
   validateCashAmount,
+  checkIfCustomerIsOwner
 };
 
 module.exports = index;

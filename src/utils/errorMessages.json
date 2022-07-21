@@ -11,5 +11,6 @@
   "nonNumericalCashAmount": "O campo valor deve possuir valor numérico",
   "notEnoughBalance": "Você não possui saldo o suficiente para realizar esta operação",
   "customerNotFound": "Cliente não encontrado",
-  "emailAlreadyExists": "Email já cadastrado"
+  "emailAlreadyExists": "Email já cadastrado",
+  "customerIsNotOwner": "Você não tem autorização para ver os ativos de outros clientes"
 }

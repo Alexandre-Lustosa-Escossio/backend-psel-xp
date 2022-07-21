@@ -1,5 +1,5 @@
 const Router = require('express');
-const { validateQuantity, errorHandler, tokenValidator, validateCashAmount } = require('./middlewares');
+const { validateQuantity, errorHandler, tokenValidator, validateCashAmount, checkIfCustomerIsOwner } = require('./middlewares');
 const { assetCustomerController, customerController, assetController, checkingAccountController } = require('./controllers');
 
 const router = Router();
@@ -105,7 +105,7 @@ const router = Router();
   * 
 */
 
-router.post('/investimentos/comprar', tokenValidator, validateQuantity, assetCustomerController.buyOrder);
+router.post('/investimentos/comprar', tokenValidator , validateQuantity, assetCustomerController.buyOrder);
 router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCustomerController.sellOrder);
 
 /** 
@@ -150,7 +150,7 @@ router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCust
  * */
 
 router.post('/clientes/registro', customerController.registerCustomer);
-router.get('/clientes/:id', tokenValidator, customerController.getCustomerAssets);
+router.get('/clientes/:id', tokenValidator, checkIfCustomerIsOwner, customerController.getCustomerAssets);
 
 /** 
  * @swagger

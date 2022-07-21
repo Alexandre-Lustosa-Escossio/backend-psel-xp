@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const { Customers, Assets, Credentials } = require('../db/models');
-const { generateToken } = require('../utils/tokenGenerator');
+const { generateToken, decodeToken } = require('../utils/tokenGenerator');
 const errMsgs = require('../utils/errorMessages.json');
 const handleHashes = require('../utils/handleHashes');
 const financialDataApiRequests = require('../utils/financialDataApiRequests');
