@@ -8,4 +8,11 @@ module.exports = {
     host: process.env.DB_HOST ,
     dialect: process.env.DB_DIALECT || 'postgres',
   },
+  test: {
+    username: 'root' ,
+    password: 'trybe' ,
+    database: 'xp_backend_test' ,
+    host: 'localhost' ,
+    dialect: 'mysql' ,
+  }
 };
