@@ -39,7 +39,7 @@ const router = Router();
  *   /investimentos/comprar:
   *    post:
   *      tags: [Investimentos]
-  *      description: Realiza a operação de compra e retorna um objeto com dados do cliente, incluindo a nova quantidade de ações
+  *      description: Realiza a operação de compra de ativos e retorna um objeto com dados do cliente, incluindo a nova quantidade de ações
   *      parameters:
   *      - in: body
   *        name: body
@@ -53,7 +53,33 @@ const router = Router();
   *              schema:
   *                type: object
   *                $ref: '#/components/schemas/Investimento'
-  *      
+  *        401:
+  *          description: É necessário o envio do token de autorização
+  *        422:
+  *          description: Quantidade de ações inválida ou em formato inválido
+  * @swagger
+  *  /investimentos/vender:
+  *    post:
+  *      tags: [Investimentos]
+  *      description: Realiza a operação de venda de ativos e retorna um objeto com dados do cliente, incluindo a nova quantidade de ações
+  *      parameters:
+  *      - in: body
+  *        name: body
+  *        required: true
+  *        schema:
+  *          $ref: '#/components/schemas/Investimento'
+  *      responses:
+  *        200:
+  *          content:
+  *            application/json:
+  *              schema:
+  *                type: object
+  *                $ref: '#/components/schemas/Investimento'
+  *        401:
+  *          description: É necessário o envio do token de autorização
+  *        422:
+  *          description: Quantidade de ações inválida ou em formato inválido  
+  * 
 */
 
 router.post('/investimentos/comprar', tokenValidator, validateQuantity, assetCustomerController.buyOrder);
