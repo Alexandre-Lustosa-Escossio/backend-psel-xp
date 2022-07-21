@@ -25,6 +25,7 @@ const checkIfCustomerIsOwner = (req, res, next) => {
   const { id: customerId } = res.locals;
   const { id: searchedCustomerId } = req.params;
   customerId !== +searchedCustomerId && raiseError(StatusCodes.UNAUTHORIZED, errMsgs.customerIsNotOwner)
+  next()
 };
 
 module.exports = { tokenValidator, checkIfCustomerIsOwner };
