@@ -97,5 +97,5 @@ router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getBy
 
 router.post('/login', customerController.signInCustomer);
 
-//router.use(errorHandler);
+router.use(errorHandler);
 module.exports = router;
