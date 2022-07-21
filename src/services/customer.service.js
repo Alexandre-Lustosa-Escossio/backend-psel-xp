@@ -2,6 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 const { Customers, Assets, Credentials } = require('../db/models');
 const { generateToken } = require('../utils/tokenGenerator');
 const errMsgs = require('../utils/errorMessages.json');
+const handleHashes = require('../utils/handleHashes');
 const financialDataApiRequests = require('../utils/financialDataApiRequests');
 const raiseError = require('../utils/raiseError');
 
@@ -53,13 +54,15 @@ const signInCustomer = async (payload) => {
 };
 
 const registerCustomer = async (payload) => { 
-  const { email, password } = payload;
+  const { nome: customer_name, email, senha: password } = payload;
   const customerData = await Customers.findOne({ where: { email } });
   if (customerData) {
     raiseError(StatusCodes.CONFLICT, errMsgs.emailAlreadyExists);
   }
-  const customer = await Customers.create(payload);
-  return { customer };
+  const hash = await handleHashes.hash(password);
+  const customer = await Customers.create({ customer_name, email});
+  await Credentials.create({ customer_id: customer.id, password: hash });
+  return  customer ;
 }
 
-module.exports = { getCustomerAssets, signInCustomer };
+module.exports = { getCustomerAssets, signInCustomer, registerCustomer };
