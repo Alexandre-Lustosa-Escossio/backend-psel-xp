@@ -26,4 +26,25 @@ const processBuyOrder = (buyOrder) => {
 }
 
 
+const processSellOrder = (sellOrder) => { 
+  const sortedSellOrders = []
+  const sortedBuyOrders = []
+  for (let i = sortedBuyOrders.length - 1; i >= 0; i--) {
+    if (sortedBuyOrders[i].price > sellOrder.price) {
+      if (sortedBuyOrders[i].quantity < sellOrder.quantity) {
+        removeBuyOrder(sortedBuyOrders, i)
+        sellOrder.quantity -= sortedBuyOrders[i].quantity
+      }
+      else {
+        removeBuyOrder(sortedBuyOrders, i)
+        sortedBuyOrders[i].quantity -= sellOrder.quantity
+        addBuyOrder(sortedBuyOrders, sortedBuyOrders[i])
+      }
+    }
+    else {
+      addSellOrder(sortedSellOrders)
+    }
+  }
+}
+
   
