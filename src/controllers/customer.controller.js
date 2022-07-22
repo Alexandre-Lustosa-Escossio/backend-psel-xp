@@ -31,4 +31,13 @@ const registerCustomer = async (req, res) => {
   res.status(StatusCodes.OK).json(customer);
 }
 
-module.exports = { signInCustomer, getCustomerAssets, registerCustomer };
+const { MatchingEngine, OrderSide } = require('exchange-macthing-engine');
+const teste = async (req, res) => { 
+  const matchingEngine = new MatchingEngine()
+  const primeiroResultado = matchingEngine.newOrder('Instrument', 12.5, 5, OrderSide.buy)
+  const segundoResultado = matchingEngine.newOrder('Instrument', 12.5, 5, OrderSide.sell)
+  console.log(segundoResultado)
+  console.log(matchingEngine.orderBooks)
+}
+
+module.exports = { signInCustomer, getCustomerAssets, registerCustomer, teste };
