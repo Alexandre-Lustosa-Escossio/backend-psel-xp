@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      order_id: {
+      asset_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },

@@ -3,21 +3,22 @@ const { Asset_Customers: assetCustomers, Assets, Customers } = require('../db/mo
 const { assetService, customerService, orderPlacementService } = require('.');
 const errMsgs = require('../utils/errorMessages.json');
 const raiseError = require('../utils/raiseError');
+const { processBuyOrder, processSellOrder } = require('../utils/orderBookMatching');
+const financialDataApiRequest = require('../utils/financialDataApiRequests')
 
 const findAssetInWallet = ({ assets }, codAtivo) => {
   const foundAsset = assets.find(({ dataValues }) => dataValues.asset_code === codAtivo);
   return foundAsset;
 };
 
-const updateAssetQuantity = async ({ dataValues }, { qtdeAtivo, codCliente }, orderType) => {
-  const { id: assetId } = dataValues;
-  const { dataValues: assetDetails } = dataValues.Asset_Customers;
-  const newQuantity = orderType === 'buy' ? assetDetails.quantity + qtdeAtivo : assetDetails.quantity - qtdeAtivo;
+const updateAssetQuantity = async (assetDetails, { qtdeAtivo, codCliente }, orderType) => {
+  const {id, Asset_Customers: {quantity}} = assetDetails
+  const newQuantity = orderType === 'buy' ? quantity + qtdeAtivo : quantity - qtdeAtivo;
   await assetCustomers.update({ quantity: newQuantity },
     {
       where: {
         customer_id: codCliente,
-        asset_id: assetId,
+        asset_id: id,
       },
     });
   return newQuantity; 
@@ -30,46 +31,46 @@ const createAssetInWallet = async ({ codAtivo, codCliente, qtdeAtivo }) => {
   return insertedRecord;
 };
 
-const handleBuyAssetScenarios = async (assetInWallet, payload) => {
-  if (assetInWallet) {
-    const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'buy');
-    const updatedAssetRecord = { ...payload, qtdeAtivo: newAssetQuantity };
-    return updatedAssetRecord;
-  }
-  const newAssetRecord = await createAssetInWallet(payload);
-  return newAssetRecord;
-};
 
-const validateSellAssetScenarios = async (assetInWallet, payload) => {
-  if (!assetInWallet) {
-    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.youDontHaveThatAsset);
-  }
-  const { dataValues: assetDetails } = assetInWallet.dataValues.Asset_Customers;
-  if (assetDetails.quantity < payload.qtdeAtivo) {
-    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.notEnoughAssetQuantity);
-  }
-};
+const assembleOrderPayload = async (payload) => {
+  const { codCliente, codAtivo, qtdeAtivo } = payload;
+  const { dataValues:  { id: asset_id } } = await assetService.getByCode(codAtivo)
+  const price = await financialDataApiRequest.getAssetPrice(codAtivo);
+  const buyOrderObj = { customer_id: codCliente, asset_id, quantity: qtdeAtivo, price };
+  return buyOrderObj;
+}
 
 const buyOrder = async (payload) => {
   const { codCliente, codAtivo } = payload;
-  const customerAssets = await customerService.getCustomerAssets(codCliente);
-  const assetInWallet = findAssetInWallet(customerAssets, codAtivo);
+  const customerAssetInfo = await customerService.getCustomerAssetByAssetCode(codCliente, codAtivo);
+  const buyOrderObj = await assembleOrderPayload(payload);
+  if (!customerAssetInfo) {
+    await processBuyOrder(buyOrderObj);
+    const newAssetRecord = await createAssetInWallet(payload);
+    return newAssetRecord;
+  }
   // Fazer uma transaction
-  await orderPlacementService.createBuyOrder(payload);
-  const newAssetRecord = await handleBuyAssetScenarios(assetInWallet, payload);
-  return newAssetRecord;
+  await processBuyOrder(buyOrderObj);
+  const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'buy');
+  const updatedAssetRecord = { ...payload, qtdeAtivo: newAssetQuantity };
+  return updatedAssetRecord;
 };
 
 const sellOrder = async (payload) => {
   const { codCliente, codAtivo } = payload;
-  const customerAssets = await customerService.getCustomerAssets(codCliente);
-  const assetInWallet = findAssetInWallet(customerAssets, codAtivo);
-  await validateSellAssetScenarios(assetInWallet, payload);
+  const customerAssetInfo = await customerService.getCustomerAssetByAssetCode(codCliente, codAtivo);
+  const sellOrderObj = await assembleOrderPayload(payload);
+  if (!customerAssetInfo) {
+    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.youDontHaveThatAsset);
+  }
+  if (customerAssetInfo.assets[0].Asset_Customers.quantity < payload.qtdeAtivo) {
+    raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.notEnoughAssetQuantity);
+  }
   // Fazer uma transaction
-  await orderPlacementService.createSellOrder(payload, assetInWallet.id);
-  const newAssetQuantity = await updateAssetQuantity(assetInWallet, payload, 'sell');
+  await processSellOrder(sellOrderObj)
+  const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'sell');
   const newAssetRecord = { ...payload, qtdeAtivo: newAssetQuantity };
   return newAssetRecord;
 };
 
-module.exports = { buyOrder, sellOrder };
+module.exports = { buyOrder, sellOrder }

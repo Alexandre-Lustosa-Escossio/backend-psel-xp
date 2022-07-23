@@ -10,7 +10,7 @@ const OrderBook = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    order_id: {
+    asset_id: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },

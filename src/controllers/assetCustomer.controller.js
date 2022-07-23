@@ -11,4 +11,4 @@ const sellOrder = async (req, res) => {
   res.status(StatusCodes.OK).json(newAssetCustomerData);
 };
 
-module.exports = { buyOrder, sellOrder };
+module.exports = { buyOrder, sellOrder }

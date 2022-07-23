@@ -12,5 +12,6 @@
   "notEnoughBalance": "Você não possui saldo o suficiente para realizar esta operação",
   "customerNotFound": "Cliente não encontrado",
   "emailAlreadyExists": "Email já cadastrado",
-  "customerIsNotOwner": "Você não tem autorização para ver os ativos de outros clientes"
+  "customerIsNotOwner": "Você não tem autorização para ver os ativos de outros clientes",
+  "assetNotFound": "Ativo não encontrado"
 }
