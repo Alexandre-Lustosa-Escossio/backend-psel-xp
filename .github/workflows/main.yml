@@ -6,6 +6,7 @@ jobs:
      runs-on: ubuntu-18.04
      env:
        JWT_SECRET: sonhograndementeabertaespiritoempreendedor
+       FINANCE_API_KEY: uHMD7JDmMC4gVSTtCS1vL1jcu1JAmoZlubmiREkj
      steps: 
        - uses: actions/checkout@v2
        - uses: actions/setup-node@v3
