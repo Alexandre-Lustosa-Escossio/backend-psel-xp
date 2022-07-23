@@ -10,6 +10,10 @@ module.exports = {
       customer_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Customers',
+          key: 'id',
+        }
       },
       asset_id: {
         allowNull: false,
