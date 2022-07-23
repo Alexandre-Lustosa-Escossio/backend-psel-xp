@@ -4,6 +4,9 @@ const { generateToken, decodeToken } = require('../utils/tokenGenerator');
 const errMsgs = require('../utils/errorMessages.json');
 const handleHashes = require('../utils/handleHashes');
 const raiseError = require('../utils/raiseError');
+const Sequelize = require('sequelize');
+const config = require('../db/config/config');
+const sequelize = new Sequelize(config.development)
 
 const getCustomerAssets = async (customerId) => {
   const customerAssets = await Customers.findOne({
@@ -52,10 +55,12 @@ const registerCustomer = async (payload) => {
     raiseError(StatusCodes.CONFLICT, errMsgs.emailAlreadyExists);
   }
   const hash = await handleHashes.hash(password);
-  // Transaction to create customer and credentials
-  const customer = await Customers.create({ customer_name, email});
-  await Credentials.create({ customer_id: customer.id, password: hash });
-  return  customer ;
+  const transactionResponse = await sequelize.transaction(async (t) => {
+    const customer = await Customers.create({ customer_name, email }, { transaction: t });
+    await Credentials.create({ customer_id: customer.id, password: hash }, { transaction: t });
+    return customer
+  })
+  return  transactionResponse ;
 }
 
 module.exports = { getCustomerAssets, signInCustomer, registerCustomer, getCustomerAssetByAssetCode };
