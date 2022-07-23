@@ -1,6 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const customerService = require('../services/customer.service');
-const financialDataApiRequests = require('../utils/financialDataApiRequests');
+const { makeTrade } = require('../utils/orderBookMatching');
+const errMsgs = require('../utils/errorMessages');
+const appendAssetsPrices = require('../utils/appendAssetsPrices');
 
 const assembleCustomerAssetsResponse = (customerAssets) => {
   const { assets, id: CodCliente } = customerAssets;
@@ -21,6 +23,10 @@ const signInCustomer = async (req, res) => {
 const getCustomerAssets = async (req, res) => {
   const { id } = req.params; 
   const customerAssets = await customerService.getCustomerAssets(id);
+  if (!customerAssets) {
+    raiseError(StatusCodes.NOT_FOUND, errMsgs.noneInvestedYet);
+  }
+  customerAssets.assets = await appendAssetsPrices(customerAssets);
   const assembledResponse = assembleCustomerAssetsResponse(customerAssets);
   res.status(StatusCodes.OK).json(assembledResponse);
 };
@@ -31,4 +37,10 @@ const registerCustomer = async (req, res) => {
   res.status(StatusCodes.OK).json(customer);
 }
 
-module.exports = { signInCustomer, getCustomerAssets, registerCustomer };
+const orderBook = async (req, res) => { 
+  const response = await makeTrade(req.body)
+  res.status(StatusCodes.OK).json(response);
+}
+
+
+module.exports = { signInCustomer, getCustomerAssets, registerCustomer, orderBook };

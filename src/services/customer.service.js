@@ -3,34 +3,29 @@ const { Customers, Assets, Credentials } = require('../db/models');
 const { generateToken, decodeToken } = require('../utils/tokenGenerator');
 const errMsgs = require('../utils/errorMessages.json');
 const handleHashes = require('../utils/handleHashes');
-const financialDataApiRequests = require('../utils/financialDataApiRequests');
 const raiseError = require('../utils/raiseError');
-
-const requestPrice = async (asset) => {
-  const price = await financialDataApiRequests.getAssetPrice(asset.asset_code);
-  return price;
-};
-
-const appendAssetsPrices = async ({ assets }) => {
-  const assetsWithPrice = await Promise.all(assets.map(async (asset) => {
-    const price = await requestPrice(asset);
-    asset.Asset_Customers.price = price;
-    return asset;
-  }));
-  return assetsWithPrice;
-};
 
 const getCustomerAssets = async (customerId) => {
   const customerAssets = await Customers.findOne({
     where: { id: customerId },
     include: [{ model: Assets, as: 'assets', through: { attributes: ['quantity'] } }],
   });
-  if (!customerAssets) {
-    raiseError(StatusCodes.NOT_FOUND, errMsgs.noneInvestedYet);
-  }
-  customerAssets.assets = await appendAssetsPrices(customerAssets);
   return customerAssets;
 };
+
+const getCustomerAssetByAssetCode = async (customerId, assetCode) => { 
+  const customerAsset = await Customers.findOne({
+    where: { id: customerId },
+    include: [{
+      model: Assets, as: 'assets',
+      through: {
+        attributes: ['quantity']
+      },
+      where: { asset_code: assetCode }
+    }],
+  });
+  return customerAsset
+}
 
 const signInCustomer = async (payload) => {
   const { email, senha: password } = payload;
@@ -63,4 +58,4 @@ const registerCustomer = async (payload) => {
   return  customer ;
 }
 
-module.exports = { getCustomerAssets, signInCustomer, registerCustomer };
+module.exports = { getCustomerAssets, signInCustomer, registerCustomer, getCustomerAssetByAssetCode };
