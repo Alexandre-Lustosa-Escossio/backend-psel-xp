@@ -5,11 +5,9 @@ const errMsgs = require('../utils/errorMessages.json');
 const raiseError = require('../utils/raiseError');
 const { processBuyOrder, processSellOrder } = require('../utils/orderBookMatching');
 const financialDataApiRequest = require('../utils/financialDataApiRequests')
-
-const findAssetInWallet = ({ assets }, codAtivo) => {
-  const foundAsset = assets.find(({ dataValues }) => dataValues.asset_code === codAtivo);
-  return foundAsset;
-};
+const Sequelize = require('sequelize');
+const config = require('../db/config/config');
+const sequelize = new Sequelize(config.development)
 
 const updateAssetQuantity = async (assetDetails, { qtdeAtivo, codCliente }, orderType) => {
   const {id, Asset_Customers: {quantity}} = assetDetails
@@ -49,10 +47,13 @@ const buyOrder = async (payload) => {
     const newAssetRecord = await createAssetInWallet(payload);
     return newAssetRecord;
   }
-  // Fazer uma transaction
-  await processBuyOrder(buyOrderObj);
-  const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'buy');
-  const updatedAssetRecord = { ...payload, qtdeAtivo: newAssetQuantity };
+  const transactionResponse = await sequelize.transaction(async (t) => {
+    await processBuyOrder(buyOrderObj, { transaction: t });
+    const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'buy', { transaction: t });
+
+    return newAssetQuantity
+  });
+  const updatedAssetRecord = { ...payload, qtdeAtivo: transactionResponse };
   return updatedAssetRecord;
 };
 
@@ -66,10 +67,12 @@ const sellOrder = async (payload) => {
   if (customerAssetInfo.assets[0].Asset_Customers.quantity < payload.qtdeAtivo) {
     raiseError(StatusCodes.NOT_ACCEPTABLE, errMsgs.notEnoughAssetQuantity);
   }
-  // Fazer uma transaction
-  await processSellOrder(sellOrderObj)
-  const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'sell');
-  const newAssetRecord = { ...payload, qtdeAtivo: newAssetQuantity };
+  const transactionResponse = await sequelize.transaction(async (t) => {
+    await processSellOrder(sellOrderObj, {transaction: t})
+    const newAssetQuantity = await updateAssetQuantity(customerAssetInfo.assets[0].dataValues, payload, 'sell', { transaction: t })
+    return newAssetQuantity
+  });
+  const newAssetRecord = { ...payload, qtdeAtivo: transactionResponse };
   return newAssetRecord;
 };
 
