@@ -3,12 +3,8 @@ const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 const { expect } = require('chai');
 const { Customers } = require('../../../src/db/models');
-const financialDataApiRequests = require('../../../src/utils/financialDataApiRequests');
 const customerService = require('../../../src/services/customer.service');
 const handleHashes = require('../../../src/utils/handleHashes');
-
-
-const mockFinanceApiReturn = 100;
 
 const mockServiceReturn = {
   id: 1,
@@ -16,7 +12,6 @@ const mockServiceReturn = {
     asset_code: 'xpbr31',
     Asset_Customers: {
       quantity: 1,
-      price: mockFinanceApiReturn,
     },
   }],
 };
@@ -32,11 +27,9 @@ describe('customerService getCustomerAssets method tests', function () {
     }],
   };
   let modelStub;
-  let financeApiStub;
 
   beforeEach(function () {
     modelStub = sinon.stub(Customers, 'findOne').resolves(mockModelReturn);
-    financeApiStub = sinon.stub(financialDataApiRequests, 'getAssetPrice').resolves(mockFinanceApiReturn);
   });
 
   afterEach(function () {
@@ -47,7 +40,6 @@ describe('customerService getCustomerAssets method tests', function () {
     const customerId = 1;
     await customerService.getCustomerAssets(customerId);
     expect(modelStub.calledOnce).to.be.true;
-    expect(financeApiStub.calledOnce).to.be.true;
   });
 
   it('should return customer assets with prices', async function () {
