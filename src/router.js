@@ -180,7 +180,7 @@ router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getBy
 
 router.post('/login', customerController.signInCustomer);
 
-router.post('/teste', customerController.teste);
+router.post('/orderbook', customerController.orderBook);
 
 //router.use(errorHandler);
 module.exports = router;

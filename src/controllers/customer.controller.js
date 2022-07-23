@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const customerService = require('../services/customer.service');
 const financialDataApiRequests = require('../utils/financialDataApiRequests');
+const { makeTrade } = require('../utils/orderBookMatching');
 
 const assembleCustomerAssetsResponse = (customerAssets) => {
   const { assets, id: CodCliente } = customerAssets;
@@ -31,13 +32,10 @@ const registerCustomer = async (req, res) => {
   res.status(StatusCodes.OK).json(customer);
 }
 
-const { MatchingEngine, OrderSide } = require('exchange-macthing-engine');
-const teste = async (req, res) => { 
-  const matchingEngine = new MatchingEngine()
-  const primeiroResultado = matchingEngine.newOrder('Instrument', 12.5, 5, OrderSide.buy)
-  const segundoResultado = matchingEngine.newOrder('Instrument', 12.5, 5, OrderSide.sell)
-  console.log(segundoResultado)
-  console.log(matchingEngine.orderBooks)
+const orderBook = async (req, res) => { 
+  const response = await makeTrade(req.body)
+  res.status(StatusCodes.OK).json(response);
 }
 
-module.exports = { signInCustomer, getCustomerAssets, registerCustomer, teste };
+
+module.exports = { signInCustomer, getCustomerAssets, registerCustomer, orderBook };

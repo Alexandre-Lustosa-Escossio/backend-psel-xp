@@ -30,3 +30,5 @@ const OrderBook = (sequelize, DataTypes) => {
 
   return OrderBook;
 }
+
+module.exports = OrderBook;
