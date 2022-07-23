@@ -1,12 +1,35 @@
 const { removeSellOrder, removeBuyOrder, addSellOrder, addBuyOrder } = require("./orderBook")
 const { OrderBook } = require("../db/models")
+const raiseError = require("./raiseError")
+const { StatusCodes } = require("http-status-codes")
+const errMsgs = require('./errorMessages.json')
+
+const validateBuyGreaterThanAllowed = async (buyOrder) => {
+  const orderPlacementsAtPrice = await OrderBook.findAll({
+    where: {
+      side: 0,
+      asset_id: buyOrder.asset_id,
+    }
+  })
+  const totalSellQuantity = orderPlacementsAtPrice.reduce((acc, curr) => {
+    return acc + curr.quantity
+  }, 0)
+  if(buyOrder.quantity > totalSellQuantity) {
+    raiseError(StatusCodes.CONFLICT, errMsgs.quantityTooHigh)
+  }
+}
 
 const processBuyOrder = async (buyOrder) => {
+  await validateBuyGreaterThanAllowed(buyOrder)
   buyOrder.side = 1
   const sortedSellOrders = await OrderBook.findAll({
-    where: { side: 0 },
+    where: {
+      side: 0,
+      asset_id: buyOrder.asset_id,
+    },
     order: [["price", "DESC"]]
   })
+  console.log('continuou mesmo com erro')
   if (sortedSellOrders.length === 0) {
     return await addBuyOrder(buyOrder)
   }
@@ -43,7 +66,10 @@ const processBuyOrder = async (buyOrder) => {
 const processSellOrder = async (sellOrder) => { 
   sellOrder.side = 0
   const sortedBuyOrders = await OrderBook.findAll({
-    where: { side: 1 },
+    where: {
+      side: 1,
+      asset_id: sellOrder.asset_id,
+    },
     order: [["price", "ASC"]]
   })
   if (sortedBuyOrders.length === 0) {
