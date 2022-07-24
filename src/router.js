@@ -104,7 +104,7 @@ const router = Router();
 * */
 
 router.get('/', (req, res) => {
-  res.send('Bem vindo ao XP Inc Backend Api, acesse /swagger para ver o documentação da api.');
+  res.send('Bem vindo ao XP Inc Backend Api, acesse /docs para ver o documentação da api.');
 })
 
 /**
