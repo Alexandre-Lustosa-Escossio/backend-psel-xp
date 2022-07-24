@@ -8,6 +8,8 @@
     "dev": "nodemon src/index.js",
     "test": "mocha ./tests/unit/**/*.test.js ",
     "test:coverage": "nyc npm test",
+    "test:e2e": "npx cypress run",
+    "cypress:open": "npx cypress open",
     "lint": "eslint --fix --no-inline-config --ext .js,.jsx --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "keywords": [],
@@ -31,9 +33,10 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
-    "mysql2": "^2.3.3",
     "chai": "^4.3.6",
+    "cypress": "^10.3.1",
     "mocha": "^10.0.0",
+    "mysql2": "^2.3.3",
     "nodemon": "^2.0.19",
     "nyc": "^15.1.0",
     "sinon": "^14.0.0",
