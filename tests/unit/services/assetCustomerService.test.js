@@ -1,7 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-const { expect, assert } = require('chai');
+const { expect } = require('chai');
 const rewire = require('rewire'); 
 const assetCustomerService = rewire("../../../src/services/assetCustomer.service.js");
 const errMsgs = require('../../../src/utils/errorMessages.json');
