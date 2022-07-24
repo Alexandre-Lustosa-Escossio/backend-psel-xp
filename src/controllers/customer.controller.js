@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const customerService = require('../services/customer.service');
-const { makeTrade } = require('../utils/orderBookMatching');
 const errMsgs = require('../utils/errorMessages');
 const appendAssetsPrices = require('../utils/appendAssetsPrices');
 
@@ -37,10 +36,5 @@ const registerCustomer = async (req, res) => {
   res.status(StatusCodes.OK).json(customer);
 }
 
-const orderBook = async (req, res) => { 
-  const response = await makeTrade(req.body)
-  res.status(StatusCodes.OK).json(response);
-}
 
-
-module.exports = { signInCustomer, getCustomerAssets, registerCustomer, orderBook };
+module.exports = { signInCustomer, getCustomerAssets, registerCustomer };
