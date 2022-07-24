@@ -88,7 +88,19 @@ const router = Router();
  *         example:
  *          email: guilherme.benchimol@xp.inc
  *          senha: codigoxp
- *    
+ *    saldoCliente:
+ *      type: object
+ *      required:
+ *       - codCliente
+ *       - Valor
+ *      properties:
+ *        codCliente:
+ *          type: number
+ *        saldo:
+ *          type: number
+ *      example:
+ *       codCliente: 1
+ *       saldo: R$ 21.00
 * */
 
 router.get('/', (req, res) => {
@@ -242,21 +254,20 @@ router.post('/investimentos/vender', tokenValidator, validateQuantity, assetCust
  *    description: Rotas para manipulação de ativos
  * 
  * @swagger
- *  
  *  /ativos/:codAtivo:
- *    get:
- *       security:
-  *       - bearerAuth: [] 
-  *      tags: [Ativos]
+ *     get:
+ *      tags: [Ativos] 
+ *      security:
+  *       - bearerAuth: []
   *      description: Busca um ativo pelo código
-  *      responses:
-  *        200:
-  *          description: Retorna um objeto com dados do ativo
-  *          content:
-  *            application/json:
-  *              schema:
-  *                type: object
-  *                $ref: '#/components/schemas/Ativo'
+  *     responses:
+  *       200:
+  *         description: Retorna um objeto com dados do ativo
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: object
+  *               $ref: '#/components/schemas/Ativo'
  * 
  * */
 
@@ -311,7 +322,23 @@ router.get('/ativos/:codAtivo',tokenValidator, assetController.getByCode);
  *         description: Conta não encontrada
  *       401:
  *         description: É necessário o envio do token de autorização
+ * 
+ * @swagger
+ * /conta/:codCliente:
+ *   post:
+ *     security:
+  *     - bearerAuth: [] 
+ *     tags: [Conta Corrente]
+ *     description: Realiza a consulta do saldo bancário do cliente
+ *     
+ *     responses:
+ *       200:
+ *         description: Retorna um objeto com o código do cliente e seu saldo
+ *       404:
+ *         description: Cliente não encontrada
+ *      
  *   
+  
  * */
 router.post('/conta/saque', tokenValidator, validateCashAmount, checkingAccountController.createWithdrawalOrder);
 router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder); 
