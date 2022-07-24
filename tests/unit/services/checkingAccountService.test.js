@@ -38,26 +38,36 @@ describe('createDepositOrder method tests', () => {
 })
 
 describe('createWithdrawalOrder method tests', function () {
-  let findOneStub;
-  let updateStub;
 
-  beforeEach(function () {
-    findOneStub = sinon.stub(checkingAccount, 'findOne').returns(findOneMockReturn);
-    updateStub = sinon.stub(checkingAccount, 'update').returns(mockReturn);
+  let getByIDStub;
+  let updateBalanceStub;
+  let handleCashBalanceScenariosStub
+  const newBalance = payload.Valor + mockCurrBalance.balance
+  beforeEach(() => {
+    getByIDStub = sinon.stub().returns(mockCurrBalance)
+    updateBalanceStub = sinon.stub()
+    handleCashBalanceScenariosStub = sinon.stub().returns(newBalance)
+    revert = checkingAccountsService.__set__({
+      "getById": getByIDStub,
+      "updateBalance": updateBalanceStub,
+      "handleCashBalanceScenarios": handleCashBalanceScenariosStub,
+    });
+  })
+
+  afterEach(() => {
+    revert()
   });
 
-  afterEach(function () {
-    sinon.restore();
+  it('should return the payload with the new balance', async function () {
+    const response = await checkingAccountsService.createWithdrawalOrder(payload);
+    expect(response).to.be.deep.equal({...payload, Valor: newBalance});
   });
   
-  it('should call findById, handleCashBalanceScenarios and updateBalance methods once', async function () {
-    await checkingAccountService.createDepositOrder(payload);
-    expect(findOneStub.calledOnce).to.be.true;
-    expect(updateStub.calledOnce).to.be.true;
+  it('should stubbed methods once', async function () {
+    await checkingAccountsService.createWithdrawalOrder(payload);
+    expect(getByIDStub.calledOnce).to.be.true;
+    expect(handleCashBalanceScenariosStub.calledOnce).to.be.true
+    expect(updateBalanceStub.calledOnce).to.be.true;
   });
 
-  it('should return the value returned by updateBalance', async function () {
-    const response = await checkingAccountService.createDepositOrder(payload);
-    expect(response).to.be.deep.equal(mockReturn);
-  });
 });
