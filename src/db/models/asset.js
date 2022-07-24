@@ -16,11 +16,6 @@ const Asset = (sequelize, DataTypes) => {
     },
   }, { timestamps: false });
 
-  /* Asset.associate(models => {
-    Asset.hasMany(models.Order_Placements, {
-      foreignKey: 'asset_id', as: 'Assets'
-    })
-  }) */
     
     return Asset;
 };

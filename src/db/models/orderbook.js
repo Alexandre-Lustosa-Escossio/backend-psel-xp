@@ -28,6 +28,13 @@ const OrderBook = (sequelize, DataTypes) => {
     },
   }, { timestamps: false });
 
+  OrderBook.associate = (models) => {
+    OrderBook.belongsTo(models.Customers, {
+      foreignKey: 'customer_id',
+      onDelete: 'CASCADE',
+    });
+  }
+
   return OrderBook;
 }
 
