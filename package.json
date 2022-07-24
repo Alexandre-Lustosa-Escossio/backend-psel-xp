@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "mocha ./tests/unit/**/*.test.js ",
     "test:coverage": "nyc npm test",
@@ -23,6 +24,7 @@
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
+    "rewire": "^6.0.0",
     "sequelize": "^6.21.3",
     "sequelize-cli": "^6.4.1",
     "swagger-jsdoc": "^6.2.1",
