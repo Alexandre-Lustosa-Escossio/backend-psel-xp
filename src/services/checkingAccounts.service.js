@@ -25,21 +25,23 @@ const updateBalance = async (newBalance, customerId) => {
         customer_id: customerId,
       },
     });
-  return affectedRows;
+  if (!affectedRows) {
+    raiseError(StatusCodes.NOT_FOUND, errMsgs.customerNotFound)
+  }
 };
 
 const createDepositOrder = async ({ CodCliente, Valor }) => {
   const customerBalanceData = await getById(CodCliente);
   const newBalance = customerBalanceData.balance + Valor;
-  const affectedRows = await updateBalance(newBalance, CodCliente);
-  return affectedRows;
+  await updateBalance(newBalance, CodCliente);
+  return { CodCliente, Valor: newBalance};
 };
 
 const createWithdrawalOrder = async ({ CodCliente, Valor }) => {
   const customerBalanceData = await getById(CodCliente);
   const newBalance = handleCashBalanceScenarios(customerBalanceData.balance, Valor);
-  const affectedRows = await updateBalance(newBalance, CodCliente);
-  return affectedRows;
+  await updateBalance(newBalance, CodCliente);
+  return {CodCliente, Valor: newBalance};
 };
 
 module.exports = { createDepositOrder, createWithdrawalOrder, getById, updateBalance, handleCashBalanceScenarios };

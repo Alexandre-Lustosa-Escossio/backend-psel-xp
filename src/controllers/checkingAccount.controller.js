@@ -2,13 +2,13 @@ const { StatusCodes } = require('http-status-codes');
 const { checkingAccountService } = require('../services');
 
 const createDepositOrder = async (req, res) => {
-  await checkingAccountService.createDepositOrder(req.body);
-  res.status(StatusCodes.OK).json();
+  const newBalance = await checkingAccountService.createDepositOrder(req.body);
+  res.status(StatusCodes.OK).json(newBalance);
 };
 
 const createWithdrawalOrder = async (req, res) => {
-  await checkingAccountService.createWithdrawalOrder(req.body);
-  res.status(StatusCodes.OK).json();
+  const newBalance = await checkingAccountService.createWithdrawalOrder(req.body);
+  res.status(StatusCodes.OK).json(newBalance);
 };
 
 const getById = async (req, res) => { 
