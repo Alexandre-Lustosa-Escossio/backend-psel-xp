@@ -317,6 +317,5 @@ router.post('/conta/saque', tokenValidator, validateCashAmount, checkingAccountC
 router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccountController.createDepositOrder); 
 router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getById);
 
-
-//router.use(errorHandler);
+router.use(errorHandler);
 module.exports = router;
