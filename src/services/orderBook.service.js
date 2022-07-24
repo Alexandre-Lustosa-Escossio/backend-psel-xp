@@ -90,13 +90,7 @@ const processBuyOrder = async (buyOrder) => {
 
 const processSellOrder = async (sellOrder) => { 
   sellOrder.side = 0
-  const sortedBuyOrders = await OrderBook.findAll({
-    where: {
-      side: 1,
-      asset_id: sellOrder.asset_id,
-    },
-    order: [["price", "ASC"]]
-  })
+  const sortedBuyOrders = await getSortedOrders(1, sellOrder.asset_id)
   if (sortedBuyOrders.length === 0) {
     return await addSellOrder(sellOrder)
   }

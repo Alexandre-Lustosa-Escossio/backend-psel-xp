@@ -8,11 +8,12 @@ const errMsgs = require('../../../src/utils/errorMessages.json');
 const { StatusCodes } = require('http-status-codes');
 
 
-let validateBuyOrderGreaterThanAllowedMock
+let validateBuyGreaterThanAllowedMock
 let getSortedOrdersMock
 let addBuyOrderMock
 let removeSellOrderMock
 let addSellOrderMock
+let removeBuyOrderMock
 
 describe('processBuyOrder tests', () => {
 
@@ -95,4 +96,99 @@ describe('processBuyOrder tests', () => {
       expect(addBuyOrderMock.calledOnce).to.be.true
     })
   })
+})
+
+
+describe('processSellOrder tests', () => {
+
+  describe('when theres no buy order placed', () => {
+      
+    beforeEach(() => {
+      getSortedOrdersMock = sinon.stub().returns([])
+      addSellOrderMock = sinon.stub()
+      revert = orderBookService.__set__({
+        "getSortedOrders": getSortedOrdersMock,
+        "addSellOrder": addSellOrderMock
+      });
+    })
+    afterEach(() => {
+      revert()
+    });
+    it('should call getSortedOrders and addSellOrder', async () => {
+      const sellOrder = { price: 20, quantity: 20 }
+      await orderBookService.processSellOrder(sellOrder)
+      expect(getSortedOrdersMock.calledOnce).to.be.true
+      expect(addSellOrderMock.calledOnce).to.be.true
+    })
+  })
+
+  describe('when sell order price is equal or lesser than buy order price', () => {
+      
+    beforeEach(() => {
+      getSortedOrdersMock = sinon.stub().returns([{ dataValues: { price: 20, quantity: 20 } }])
+      addSellOrderMock = sinon.stub()
+      removeBuyOrderMock = sinon.stub()
+      addBuyOrderMock = sinon.stub()
+      revert = orderBookService.__set__({
+        "getSortedOrders": getSortedOrdersMock,
+        "addSellOrder": addSellOrderMock,
+        "removeBuyOrder": removeBuyOrderMock,
+        "addBuyOrder": addBuyOrderMock
+      });
+    })
+    afterEach(() => {
+      revert()
+    });
+
+    describe('when quantities match', () => {
+      it('should call getSortedOrders and RemoveBuyOrder', async () => {
+        const sellOrder = { price: 20, quantity: 20 }
+        await orderBookService.processSellOrder(sellOrder)
+        expect(getSortedOrdersMock.calledOnce).to.be.true
+        expect(removeBuyOrderMock.calledOnce).to.be.true
+      })
+    })
+
+    describe('when sell order quantity is greater than buy order quantity and theres no other buy order placed', async () => {
+      it('should call getSortedOrders and RemoveBuyOrder', async () => {
+        const sellOrder = { price: 20, quantity: 30 }
+        await orderBookService.processSellOrder(sellOrder)
+        expect(getSortedOrdersMock.calledOnce).to.be.true
+        expect(removeBuyOrderMock.calledOnce).to.be.true
+        expect(addSellOrderMock.calledOnce).to.be.true
+      })
+    })
+
+    describe('when sell order quantity is lesser than buy order quantity', async () => {
+      it('should call getSortedOrders,RemoveBuyOrder and addBuyOrder', async () => {
+        const sellOrder = { price: 20, quantity: 10 }
+        await orderBookService.processSellOrder(sellOrder)
+        expect(getSortedOrdersMock.calledOnce).to.be.true
+        expect(removeBuyOrderMock.calledOnce).to.be.true
+        expect(addBuyOrderMock.calledOnce).to.be.true
+      })
+    })
+  })
+
+  describe('when prices dont match', () => {
+    beforeEach(() => {
+      getSortedOrdersMock = sinon.stub().returns([])
+      addSellOrderMock = sinon.stub()
+      revert = orderBookService.__set__({
+        "getSortedOrders": getSortedOrdersMock,
+        "addSellOrder": addSellOrderMock
+      });
+    })
+    afterEach(() => {
+      revert()
+    });
+
+    it('should call getSortedOrders and addSellOrder', async () => {
+      const sellOrder = { price: 30, quantity: 20 }
+      await orderBookService.processSellOrder(sellOrder)
+      expect(getSortedOrdersMock.calledOnce).to.be.true
+      expect(addSellOrderMock.calledOnce).to.be.true
+    })
+  })
+
 })
