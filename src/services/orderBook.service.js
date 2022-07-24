@@ -1,16 +1,37 @@
-const { removeSellOrder, removeBuyOrder, addSellOrder, addBuyOrder } = require("./orderBook")
 const { OrderBook } = require("../db/models")
-const raiseError = require("./raiseError")
+const raiseError = require("../utils/raiseError")
 const { StatusCodes } = require("http-status-codes")
-const errMsgs = require('./errorMessages.json')
+const errMsgs = require('../utils/errorMessages.json')
 
-const validateBuyGreaterThanAllowed = async (buyOrder) => {
+
+const addBuyOrder = async (buyOrder) => {
+  await OrderBook.create(buyOrder)
+}
+
+const addSellOrder = async (sellOrder) => {
+  await OrderBook.create(sellOrder)
+}
+
+const removeBuyOrder = async (buyOrder) => {
+  await OrderBook.destroy({ where: { id: buyOrder.id } })
+}
+
+const removeSellOrder = async (sellOrder) => {
+  await OrderBook.destroy({ where: { id: sellOrder.id } })
+}
+
+const getAllWithTargetPrice = async (side, assetId) => {
   const orderPlacementsAtPrice = await OrderBook.findAll({
     where: {
-      side: 0,
-      asset_id: buyOrder.asset_id,
+      side,
+      asset_id: assetId
     }
   })
+  return orderPlacementsAtPrice
+}
+
+const validateBuyGreaterThanAllowed = async (buyOrder) => {
+  const orderPlacementsAtPrice = await getAllWithTargetPrice(0, buyOrder.asset_id)
   const totalSellQuantity = orderPlacementsAtPrice.reduce((acc, curr) => {
     return acc + curr.quantity
   }, 0)
@@ -19,17 +40,21 @@ const validateBuyGreaterThanAllowed = async (buyOrder) => {
   }
 }
 
-const processBuyOrder = async (buyOrder) => {
-  await validateBuyGreaterThanAllowed(buyOrder)
-  buyOrder.side = 1
-  const sortedSellOrders = await OrderBook.findAll({
+const getSortedOrders = async (side, assetId) => {
+  const sortedOrders = await OrderBook.findAll({
     where: {
-      side: 0,
-      asset_id: buyOrder.asset_id,
+      side,
+      asset_id: assetId,
     },
     order: [["price", "DESC"]]
   })
-  console.log('continuou mesmo com erro')
+  return sortedOrders
+}
+
+const processBuyOrder = async (buyOrder) => {
+  await validateBuyGreaterThanAllowed(buyOrder)
+  buyOrder.side = 1
+  const sortedSellOrders = await getSortedOrders(0, buyOrder.asset_id)
   if (sortedSellOrders.length === 0) {
     return await addBuyOrder(buyOrder)
   }

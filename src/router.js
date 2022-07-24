@@ -318,5 +318,5 @@ router.post('/conta/deposito', tokenValidator, validateCashAmount, checkingAccou
 router.get('/conta/:codCliente', tokenValidator, checkingAccountController.getById);
 
 
-router.use(errorHandler);
+//router.use(errorHandler);
 module.exports = router;
