@@ -23,8 +23,10 @@ Antes de iniciar o projeto, fiz um brainstorming tentando entender que entregas,
 <details>
   <summary><strong>🎯 Tomadas de Decisão</strong></summary><br />
   
-- Uma vez que não foi informado o banco de dados utilizado em produção, as interações com o banco de dados ficaram a cargo de um ORM, para maior facilidade de migração caso necessário. O ORM de escolha foi o [Sequelize](https://sequelize.org/) por motivos de conhecimento prévio.
+- Uma vez que não foi informado o banco de dados utilizado em produção, as interações com o banco de dados ficaram a cargo de um ORM, para maior facilidade de migração caso necessário. Para validar esta premissa, a aplicação foi lançada utilizando o [heroku](https://www.heroku.com) e tem seu banco de dados hospedado no [supabase](https://supabase.com/). O ORM de escolha foi o [sequelize](https://sequelize.org/) por motivos de conhecimento prévio.
 - Optei pelo desenvolvimento da aplicação em JS funcional devido a maior agilidade de desenvolvimento nessa stack quando comparado ao TS. Essa agilidade teve bastatnte peso na decisão devido à grande quantidade de entegas extra a serem implementadas, frente o curto prazo de entrega, visando tornar a aplicação mais completa. Além disso, bugs acontecem e, durante todo o período de curso na Trybe, em JS, fui exposto a diversos deles, assim, caso acontecesse algum bug seria bem mais provavel que eu já soubesse onde procurar a resposta, em contraste ao TS, o qual ainda é novo para mim e me tomaria consideravelmente mais tempo para resolver conflitos.
+- Dada a possibilidade de crescimento da aplicação ao implementar os requisitos extras, optei por implementar um pipeline CI/CD e abrir Pull Request a cada feature extra, buscando aumentar a confiabilidade e agilidade no desenvolvimento.
+- Buscando chegar o mais próximo possível de uma situação real, o valor da ordem de compra/venda é calculado no momento da operação por meio de uma consulta a uma api externa. Essa ordem passa então por um algoritmo de matching de ordens de compra e venda que executa a operação em caso de correspondência de preços, modificando as quantidades de acordo com a negociação fechada e salvando essas novas informações no banco de dados, enquanto exclui as anteriores.
 
  </details>
  
@@ -74,7 +76,7 @@ A aplicação foi desenvolvida seguindo o padrão MSC (Model, Service, Controlle
 - Não é possível, para um cliente, buscar pela composição de uma carteira que não seja a sua propria.
 - Não é possível depositar quantidades não numéricas ou menores ou iguais a zero. Além disso, não é possível sacar um valor maior que o disponível em conta.
 - Não é possível depositar quantidades não numéricas ou menores ou iguais a zero.
-- As operações de retirar/adicionar ativos à carteira e retirar/adicionar ordens de compra/venda são feitas em conjunto por meio de uma transaction, caso uma das duas dê errado, ambas são canceladas. Assim, não ocorre de uma ação ser adicionada a uma carteira sem que sua ordem de compra seja registrada. 
+- As operações de retirar/adicionar ativos à carteira e retirar/adicionar ordens de compra/venda são feitas em conjunto por meio de uma transaction do sequelize,assim, caso uma das operações falhe, ambas são canceladas. Assim, não ocorre de uma ação ser adicionada a uma carteira sem que sua ordem de compra seja registrada. 
 
 </details>
   
@@ -91,6 +93,7 @@ Ao iniciar o projeto, o primeiro grande desafio foi planejar quais seriam as ent
 - Habilitar transferência de fundos entre conta corrente e conta de ativos.
 - Habilitar ordens a preço arbitrário.
 - Fazer com que o registro e matching de ordens seja processado em memória e salvo de tempos em tempos visando escalabilidade.
+- Criar entidade de histórico de transações.
 
 </details>
 
@@ -101,6 +104,21 @@ Caso não queira realizar testes localmente acesse https://backend-api-xp.heroku
     # terminal
     $ git clone https://github.com/Alexandre-Lustosa-Escossio/backend-psel-xp.git
  ```
+ ```
+    # editor
+    .../back-psel-xp/.env
+    // .env example
+    DB_USERNAME=postgres
+    DB_HOST=db.tsehvnavvoqwhygsrxuw.supabase.co
+    DB_PASSWORD=foguetenaotemre
+    DB_DIALECT=postgres
+    DB_NAME=postgres
+    PORT=3000
+    JWT_SECRET=sonhograndementeabertaespiritoempreendedor
+    FINANCE_API_KEY=uHMD7JDmMC4gVSTtCS1vL1jcu1JAmoZlubmiREkj
+    NODE_ENV=test
+ ```
+ 
  ```
     # editor
     .../backend-psel-xp/
